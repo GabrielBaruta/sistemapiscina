@@ -7,16 +7,13 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
     <header>
-        <div class="logo">
-            <h2>🌊 LimpaPiscina</h2>
-        </div>
-        <nav>
+        <div class="logo"><h2>🌊 LimpaPiscina</h2></div>
+        <nav id="menu-nav">
             <a href="index.html">Home</a>
             <a href="loja.html">Loja</a>
             <a href="orcamento.html">Orçamento</a>
-            <a href="login.html">Login</a>
+            <a href="login.html" id="btn-login">Login</a>
         </nav>
     </header>
     
@@ -32,43 +29,45 @@
 
     <main>
         <section id="galeria" class="gallery-section">
-            <h2 style="color: var(--primary-blue); margin-bottom: 10px;">Eficiência Comprovada</h2>
-            <p style="color: #666;">Confira alguns de nossos tratamentos de choque.</p>
-            
+            <h2 style="color: var(--primary-blue);">Eficiência Comprovada</h2>
+            <p style="color: #666;">Confira alguns de nossos tratamentos.</p>
             <div class="gallery-grid">
-                <div class="gallery-item">
-                    <span class="tag antes">ANTES</span>
-                    <img src="https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?auto=format&fit=crop&w=600&q=80" alt="Piscina Verde">
-                </div>
-                <div class="gallery-item">
-                    <span class="tag depois">DEPOIS</span>
-                    <img src="https://images.unsplash.com/photo-1562778612-e1e0cda9915c?auto=format&fit=crop&w=600&q=80" alt="Piscina Limpa">
-                </div>
-
-                <div class="gallery-item">
-                    <span class="tag antes">ANTES</span>
-                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="Piscina Suja">
-                </div>
-                <div class="gallery-item">
-                    <span class="tag depois">DEPOIS</span>
-                    <img src="https://images.unsplash.com/photo-1572331165267-854da2b00dc1?auto=format&fit=crop&w=600&q=80" alt="Piscina Cristalina">
-                </div>
+                <div class="gallery-item"><span class="tag antes">ANTES</span><img src="https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?auto=format&fit=crop&w=600&q=80"></div>
+                <div class="gallery-item"><span class="tag depois">DEPOIS</span><img src="https://images.unsplash.com/photo-1562778612-e1e0cda9915c?auto=format&fit=crop&w=600&q=80"></div>
+                <div class="gallery-item"><span class="tag antes">ANTES</span><img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"></div>
+                <div class="gallery-item"><span class="tag depois">DEPOIS</span><img src="https://images.unsplash.com/photo-1572331165267-854da2b00dc1?auto=format&fit=crop&w=600&q=80"></div>
             </div>
         </section>
     </main>
 
     <footer style="background: #333; color: white; text-align: center; padding: 20px; margin-top: 40px;">
         <p>Contato: (11) 99999-9999 | contato@limpapiscina.com.br</p>
-        <p>&copy; 2025 LimpaPiscina - Serviços Profissionais.</p>
+        <p>&copy; 2025 LimpaPiscina.</p>
     </footer>
 
-    <a href="https://wa.me/5511999999999?text=Olá! Gostaria de um orçamento para minha piscina." 
-       class="whatsapp-float" 
-       target="_blank"
-       title="Fale conosco no WhatsApp">
-       💬
-    </a>
-</body>
+    <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank">💬</a>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // SCRIPT PARA MOSTRAR BOTÃO PAGAMENTO SÓ SE ESTIVER LOGADO
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = localStorage.getItem("@limpapiscina/session");
+            if (session) {
+                const nav = document.getElementById('menu-nav');
+                const btnLogin = document.getElementById('btn-login');
+                
+                // Cria e insere botão Pagamento
+                const linkPagamento = document.createElement('a');
+                linkPagamento.href = "pagamento.html";
+                linkPagamento.innerText = "Pagamento";
+                nav.insertBefore(linkPagamento, btnLogin);
+
+                // Muda Login para Sair
+                btnLogin.innerText = "Sair";
+                btnLogin.href = "#";
+                btnLogin.onclick = logout;
+            }
+        });
+    </script>
 </body>
 </html>
-
