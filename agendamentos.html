@@ -16,21 +16,30 @@
             <a href="#" onclick="logout()">Sair</a>
         </nav>
     </header>
-    <main style="display: flex; gap: 20px;">
-        <div class="card" style="flex:1">
+    <main style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="card" style="flex:1; min-width: 300px;">
             <h3>Novo Agendamento</h3>
             <form id="form-agendamento">
-                <input type="text" id="cliente" placeholder="Cliente" required>
+                <input type="text" id="cliente" placeholder="Nome do Cliente" required>
                 <input type="date" id="data" required>
-                <select id="servico"><option>Limpeza</option><option>Manutenção</option></select>
-                <input type="text" id="obs" placeholder="Obs">
-                <button type="submit" class="btn">Salvar</button>
+                <select id="servico"><option>Limpeza Padrão</option><option>Tratamento de Choque</option><option>Visita Técnica</option></select>
+                <textarea id="obs" placeholder="Observações (Ex: Cuidado com o cachorro, portão emperrado...)" rows="3"></textarea>
+                <button type="submit" class="btn">Agendar</button>
             </form>
         </div>
-        <div class="card" style="flex:2">
+        <div class="card" style="flex:2; min-width: 300px;">
             <h3>Próximas Visitas</h3>
-            <tbody id="lista-agendamentos"></tbody>
-            <table><thead><tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Ação</th></tr></thead><tbody id="lista-agendamentos"></tbody></table>
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Serviço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-agendamentos"></tbody>
+            </table>
         </div>
     </main>
     <script src="js/app.js"></script>
