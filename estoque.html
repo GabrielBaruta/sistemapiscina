@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Estoque</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <script src="js/auth.js"></script>
+    <script>checkAuth('admin');</script>
+    
+    <header>
+        <div class="logo"><h2>🌊 Gestão</h2></div>
+        <nav>
+            <a href="agendamentos.html">Agenda</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="vendas.html">Vendas</a>
+            <a href="estoque.html" style="border-bottom: 2px solid white;">Estoque</a>
+            <a href="#" onclick="logout()">Sair</a>
+        </nav>
+    </header>
+
+    <main style="display: flex; gap: 20px; flex-wrap: wrap;">
+        
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Cadastrar Produto</h3>
+            <form id="form-produto">
+                <label>Nome do Produto</label>
+                <input type="text" id="nome" placeholder="Ex: Cloro 10kg" required>
+                
+                <label>Preço (R$)</label>
+                <input type="number" id="preco" step="0.01" placeholder="0.00" required>
+                
+                <label>Estoque Inicial (Qtd)</label>
+                <input type="number" id="qtd" placeholder="Ex: 10" required>
+
+                <label>URL da Imagem</label>
+                <input type="text" id="imagem" placeholder="https://..." value="https://via.placeholder.com/400?text=Produto">
+                <small style="color:#666; display:block; margin-bottom:10px;">Cole um link de imagem ou deixe o padrão.</small>
+
+                <label>Descrição</label>
+                <textarea id="descricao" rows="3" placeholder="Detalhes do produto..."></textarea>
+
+                <button type="submit" class="btn" style="width: 100%;">Salvar Produto</button>
+            </form>
+        </div>
+
+        <div class="card" style="flex: 2; min-width: 300px;">
+            <h3 style="color: var(--primary-blue);">Estoque Atual</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Produto</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-estoque">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', renderTabelaEstoque);
+
+        function renderTabelaEstoque() {
+            const produtos = getProdutos(); // Função nova no app.js
+            const tbody = document.getElementById('lista-estoque');
+            tbody.innerHTML = '';
+            
+            produtos.forEach(p => {
+                // Alerta visual se estoque for baixo
+                const corEstoque = p.estoque < 5 ? 'color:red; font-weight:bold;' : 'color:green;';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${p.imagem}" style="width:40px; height:40px; border-radius:4px; object-fit:cover;"></td>
+                        <td><strong>${p.nome}</strong></td>
+                        <td>R$ ${p.preco.toFixed(2)}</td>
+                        <td style="${corStatus}">${p.estoque} un</td>
+                        <td>
+                            <button onclick="removerProduto(${p.id})" class="btn-delete">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function removerProduto(id) {
+            if(excluirProduto(id)) {
+                renderTabelaEstoque();
+            }
+        }
+
+        document.getElementById('form-produto').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const preco = document.getElementById('preco').value;
+            const qtd = document.getElementById('qtd').value;
+            const img = document.getElementById('imagem').value;
+            const desc = document.getElementById('descricao').value;
+
+            salvarProduto(nome, preco, img, desc, qtd);
+            renderTabelaEstoque();
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
