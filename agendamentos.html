@@ -2,40 +2,37 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Admin | Agendamentos</title>
+    <title>Admin | Agenda</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <script src="js/auth.js"></script>
-    <script>checkAuth('admin');</script> <header>
+    <script>checkAuth('admin');</script>
+    <header>
         <div class="logo"><h2>🌊 Painel Admin</h2></div>
         <nav>
-    <a href="agendamentos.html" style="border-bottom: 2px solid white;">Agenda</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="#" onclick="logout()">Sair</a>
-</nav>
+            <a href="agendamentos.html" style="border-bottom: 2px solid white;">Agenda</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="#" onclick="logout()">Sair</a>
+        </nav>
     </header>
-
-    <main style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <div class="card" style="flex: 1;">
+    <main style="display: flex; gap: 20px;">
+        <div class="card" style="flex:1">
             <h3>Novo Agendamento</h3>
             <form id="form-agendamento">
-                <input type="text" id="cliente" placeholder="Nome do Cliente" required>
+                <input type="text" id="cliente" placeholder="Cliente" required>
                 <input type="date" id="data" required>
                 <select id="servico"><option>Limpeza</option><option>Manutenção</option></select>
-                <input type="text" id="obs" placeholder="Observações">
+                <input type="text" id="obs" placeholder="Obs">
                 <button type="submit" class="btn">Salvar</button>
             </form>
         </div>
-        <div class="card" style="flex: 2;">
-            <h3>Agenda</h3>
-            <table style="width:100%">
-                <thead><tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Status</th><th>Ação</th></tr></thead>
-                <tbody id="lista-agendamentos"></tbody>
-            </table>
+        <div class="card" style="flex:2">
+            <h3>Próximas Visitas</h3>
+            <tbody id="lista-agendamentos"></tbody>
+            <table><thead><tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Ação</th></tr></thead><tbody id="lista-agendamentos"></tbody></table>
         </div>
     </main>
-
     <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', renderAgendamentos);
@@ -46,5 +43,4 @@
         });
     </script>
 </body>
-
 </html>
