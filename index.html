@@ -17,11 +17,43 @@
             <a href="login.html">Login</a>
         </nav>
     </header>
-    <section style="height: 70vh; background: #0077b6; color: white; display: flex; align-items: center; justify-content: center; text-align: center; flex-direction: column;">
-        <h1>Sua Piscina Sempre Cristalina</h1>
-        <p>Manutenção profissional e tratamento químico completo.</p>
+    
+    <section style="height: 70vh; background: linear-gradient(rgba(0,119,182,0.8), rgba(0,119,182,0.8)), url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1000&q=80'); background-size: cover; color: white; display: flex; align-items: center; justify-content: center; text-align: center; flex-direction: column;">
+        <h1 style="font-size: 3rem; margin-bottom: 20px;">Sua Piscina Sempre Cristalina</h1>
+        <p style="font-size: 1.2rem; max-width: 600px;">Manutenção profissional, tratamento químico e recuperação de água verde.</p>
         <br>
-        <a href="orcamento.html" class="btn" style="background:white; color:#0077b6">Solicitar Orçamento Grátis</a>
+        <div style="display: gap: 20px;">
+            <a href="orcamento.html" class="btn" style="background:white; color:#0077b6; margin-right: 10px;">Solicitar Orçamento</a>
+            <a href="#galeria" class="btn btn-outline" style="border-color: white; color: white;">Ver Fotos</a>
+        </div>
     </section>
+
+    <main>
+        <section id="galeria" class="gallery-section">
+            <h2 style="color: var(--primary-blue); margin-bottom: 10px;">Eficiência Comprovada</h2>
+            <p style="color: #666;">Confira alguns de nossos tratamentos de choque.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <span class="tag antes">ANTES</span>
+                    <img src="https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?auto=format&fit=crop&w=600&q=80" alt="Piscina Verde">
+                </div>
+                <div class="gallery-item">
+                    <span class="tag depois">DEPOIS</span>
+                    <img src="https://images.unsplash.com/photo-1562778612-e1e0cda9915c?auto=format&fit=crop&w=600&q=80" alt="Piscina Limpa">
+                </div>
+
+                <div class="gallery-item">
+                    <span class="tag antes">ANTES</span>
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="Piscina Suja">
+                </div>
+                <div class="gallery-item">
+                    <span class="tag depois">DEPOIS</span>
+                    <img src="https://images.unsplash.com/photo-1572331165267-854da2b00dc1?auto=format&fit=crop&w=600&q=80" alt="Piscina Cristalina">
+                </div>
+            </div>
+        </section>
+    </main>
+
 </body>
 </html>
