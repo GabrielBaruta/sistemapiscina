@@ -8,15 +8,18 @@
 <body>
     <script src="js/auth.js"></script>
     <script>checkAuth('admin');</script>
-  <header>
-    <div class="logo"><h2>🌊 Gestão</h2></div>
-    <nav>
-        <a href="agendamentos.html">Agenda</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="vendas.html">Vendas</a>
-        <a href="estoque.html">Estoque</a> <a href="#" onclick="logout()">Sair</a>
-    </nav>
-</header>
+    
+    <header>
+        <div class="logo"><h2>🌊 Gestão</h2></div>
+        <nav>
+            <a href="agendamentos.html">Agenda</a>
+            <a href="clientes.html" style="border-bottom: 2px solid white;">Clientes</a>
+            <a href="vendas.html">Vendas</a>
+            <a href="estoque.html">Estoque</a>
+            <a href="#" onclick="logout()">Sair</a>
+        </nav>
+    </header>
+
     <main style="display: flex; gap: 20px; flex-wrap: wrap;">
         
         <div class="card" style="width: 100%; background: #333; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
@@ -28,57 +31,96 @@
         </div>
 
         <div style="flex: 1; min-width: 300px;">
-            <div class="card">
-                <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Novo Contrato</h3>
+            <div class="card" style="position: sticky; top: 100px;"> <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Novo Contrato Mensal</h3>
                 <form id="form-cliente">
                     <label>Nome</label><input type="text" id="nome" required>
-                    <label>E-mail</label><input type="email" id="email" required>
+                    <label>E-mail (Login)</label><input type="email" id="email" required>
                     <label>Endereço</label><input type="text" id="endereco" required>
                     <label>Telefone</label><input type="tel" id="telefone" required>
-                    <label>Descrição</label><textarea id="descricao" rows="2" required></textarea>
-                    <label style="color:green;">Valor Mensal (R$)</label><input type="number" id="valor" step="0.01" required>
+                    <label>Descrição do Serviço</label><textarea id="descricao" rows="3" placeholder="Ex: Limpeza completa semanal..." required></textarea>
+                    <label style="color:green; font-weight:bold;">Valor Mensal (R$)</label><input type="number" id="valor" step="0.01" required>
                     <button type="submit" class="btn" style="width:100%">Salvar Contrato</button>
-                </form>
-            </div>
-            <div class="card" style="border: 2px solid #ff9800;">
-                <h3 style="color: #e65100;">⚡ Cobrança Avulsa</h3>
-                <form id="form-extra">
-                    <select id="cliente-extra" required></select>
-                    <input type="text" id="desc-extra" placeholder="Motivo (Ex: Mancha)" required>
-                    <input type="number" id="valor-extra" placeholder="Valor (R$)" step="0.01" required>
-                    <button type="submit" class="btn" style="width:100%; background:#e65100;">Lançar</button>
                 </form>
             </div>
         </div>
 
-        <div class="card" style="flex: 2; min-width: 300px;">
-            <h3 style="color: var(--primary-blue);">Carteira de Clientes</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Valor</th>
-                        <th>Status (Mês)</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="lista-clientes"></tbody>
-            </table>
+        <div style="flex: 2; min-width: 300px;">
+            
+            <div class="card" style="border: 2px solid #ff9800; background-color: #fff8e1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <h3 style="color: #e65100; margin: 0;">⚡ Lançar Cobrança Avulsa</h3>
+                    <small style="color: #666;">(Para serviços extras fora do contrato)</small>
+                </div>
+                
+                <form id="form-extra" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 2; min-width: 200px;">
+                        <label style="font-size: 0.9rem;">Cliente</label>
+                        <select id="cliente-extra" required style="margin-bottom: 0;"></select>
+                    </div>
+                    
+                    <div style="flex: 2; min-width: 150px;">
+                        <label style="font-size: 0.9rem;">Motivo</label>
+                        <input type="text" id="desc-extra" placeholder="Ex: Mancha" required style="margin-bottom: 0;">
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 100px;">
+                        <label style="font-size: 0.9rem; color: #e65100; font-weight: bold;">Valor (R$)</label>
+                        <input type="number" id="valor-extra" step="0.01" required style="margin-bottom: 0;">
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="btn" style="width:100%; background:#e65100; padding: 10px;">Lançar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Carteira de Clientes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Valor Mensal</th>
+                            <th>Status (Mês)</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-clientes">
+                        </tbody>
+                </table>
+            </div>
         </div>
+
     </main>
+
     <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', renderClientes);
+
+        // Salvar Contrato Padrão
         document.getElementById('form-cliente').addEventListener('submit', (e) => {
             e.preventDefault();
-            addCliente(document.getElementById('nome').value, document.getElementById('email').value, document.getElementById('endereco').value, document.getElementById('telefone').value, document.getElementById('valor').value, document.getElementById('descricao').value);
+            addCliente(
+                document.getElementById('nome').value, 
+                document.getElementById('email').value, 
+                document.getElementById('endereco').value, 
+                document.getElementById('telefone').value, 
+                document.getElementById('valor').value, 
+                document.getElementById('descricao').value
+            );
             renderClientes(); e.target.reset();
         });
+
+        // Salvar Cobrança Extra
         document.getElementById('form-extra').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('cliente-extra').value;
+            const desc = document.getElementById('desc-extra').value;
+            const valor = document.getElementById('valor-extra').value;
+            
             if(!email) return alert("Selecione um cliente!");
-            addExtra(email, document.getElementById('desc-extra').value, document.getElementById('valor-extra').value);
+
+            addExtra(email, desc, valor);
             e.target.reset();
         });
     </script>
