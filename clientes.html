@@ -17,6 +17,42 @@
         </nav>
     </header>
     <main style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <main style="display: flex; gap: 20px; flex-wrap: wrap;">
+        
+        <div class="card" style="width: 100%; background: #333; color: white; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+            <div>
+                <h3 style="margin: 0; color: #fff;">🔧 Segurança de Dados</h3>
+                <small style="color: #ccc;">Baixe seus dados para não perdê-los se limpar o navegador.</small>
+            </div>
+            <div>
+                <button onclick="exportarDados()" class="btn" style="background: white; color: #333; border: 1px solid #ccc;">⬇️ Baixar Backup</button>
+                
+                <label class="btn" style="background: #4caf50; color: white; cursor: pointer; margin-left: 10px;">
+                    ⬆️ Restaurar
+                    <input type="file" onchange="importarDados(event)" style="display: none;" accept=".json">
+                </label>
+            </div>
+        </div>
+        
+        ```
+
+---
+
+### 5. Como Testar Tudo 🧪
+
+1.  **WhatsApp:** Abra a Home e veja se o botão verde com o ícone "💬" apareceu no canto inferior direito. Clique nele.
+2.  **Backup:**
+    * Vá no Painel Admin (`clientes.html`).
+    * Você verá a barra preta no topo "Segurança de Dados".
+    * Clique em "Baixar Backup". Um arquivo `.json` será salvo no seu computador.
+    * (Teste Hardcore): Limpe o cache do seu navegador (isso apagaria tudo). Depois, use o botão "Restaurar" e selecione o arquivo que você baixou. Tudo deve voltar ao normal!
+3.  **Impressão:**
+    * Faça login como cliente.
+    * Vá em Pagamentos.
+    * Aperte `Ctrl + P` (ou Command + P no Mac).
+    * Veja na pré-visualização que o menu e os botões sumiram, e apareceu "COMPROVANTE DE ASSINATURA" no topo.
+
+Tudo pronto! Pode subir essas atualizações para o GitHub. Seu sistema agora está super robusto. 🚀
         
         <div style="flex: 1; min-width: 300px;">
             
