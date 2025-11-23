@@ -16,28 +16,43 @@ function renderAgendamentos() {
     const lista = getAgendamentos();
     const tbody = document.getElementById('lista-agendamentos');
     if(!tbody) return;
+    
     tbody.innerHTML = '';
     lista.forEach(item => {
+        // Se tiver observação, o botão fica verde, senão fica cinza
+        const temObs = item.obs && item.obs.length > 0;
+        const btnStyle = temObs ? "background:#4caf50" : "background:#ccc; cursor:not-allowed";
+        
         tbody.innerHTML += `
             <tr>
                 <td>${item.data}</td>
                 <td><strong>${item.cliente}</strong></td>
                 <td>${item.servico}</td>
-                <td>${item.status}</td>
-                <td><button onclick="deleteAgendamento(${item.id})" class="btn-delete">X</button></td>
+                <td>
+                    <button onclick="verObservacao(${item.id})" class="btn-view" style="${btnStyle}" title="Ver detalhes">👁️ Ver</button>
+                    <button onclick="deleteAgendamento(${item.id})" class="btn-delete" title="Excluir">🗑️</button>
+                </td>
             </tr>`;
     });
 }
 
+function verObservacao(id) {
+    const item = getAgendamentos().find(i => i.id === id);
+    if(item) {
+        if(!item.obs) return alert("Nenhuma observação registrada.");
+        alert(`📝 DETALHES DO PEDIDO:\n\n"${item.obs}"\n\n📍 Endereço/Info: ${item.cliente}`);
+    }
+}
+
 function deleteAgendamento(id) {
-    if(confirm("Excluir agendamento?")) {
+    if(confirm("Excluir este agendamento?")) {
         const lista = getAgendamentos().filter(i => i.id !== id);
         localStorage.setItem(AGENDAMENTOS_KEY, JSON.stringify(lista));
         renderAgendamentos();
     }
 }
 
-// --- GESTÃO DE CLIENTES (COM CONTRATO) ---
+// --- GESTÃO DE CLIENTES ---
 const CLIENTES_KEY = "@limpapiscina/clientes";
 
 function getClientes() {
@@ -65,22 +80,21 @@ function renderClientes() {
         tbody.innerHTML += `
             <tr>
                 <td><strong>${item.nome}</strong><br><small>${item.email}</small></td>
-                <td>${item.endereco}<br><em style="font-size:0.8rem">${item.descricao || ''}</em></td>
+                <td>${item.endereco}</td>
                 <td style="color:var(--primary-blue);font-weight:bold;">R$ ${item.valor}</td>
-                <td><button onclick="deleteCliente(${item.id})" class="btn-delete">X</button></td>
+                <td><button onclick="deleteCliente(${item.id})" class="btn-delete">🗑️ Excluir</button></td>
             </tr>`;
     });
 }
 
 function deleteCliente(id) {
-    if(confirm("Remover contrato?")) {
+    if(confirm("Tem certeza que deseja EXCLUIR este contrato?\nO cliente perderá acesso à área de pagamento.")) {
         const lista = getClientes().filter(i => i.id !== id);
         localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
         renderClientes();
     }
 }
 
-// Busca contrato pelo email
 function getMeuPlano(emailLogado) {
     return getClientes().find(c => c.email === emailLogado); 
 }
