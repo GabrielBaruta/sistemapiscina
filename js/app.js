@@ -153,3 +153,55 @@ function renderLoja() {
             </div>`;
     });
 }
+
+// --- SISTEMA DE BACKUP (NOVO) ---
+
+function exportarDados() {
+    // 1. Reúne todos os dados do localStorage num único objeto
+    const backup = {
+        clientes: localStorage.getItem("@limpapiscina/clientes"),
+        agendamentos: localStorage.getItem("@limpapiscina/agendamentos"),
+        extras: localStorage.getItem("@limpapiscina/extras"),
+        users: localStorage.getItem("@limpapiscina/users"),
+        dataBackup: new Date().toLocaleString()
+    };
+
+    // 2. Cria um arquivo JSON invisível para download
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "backup_limpapiscina_" + Date.now() + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+function importarDados(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const dados = JSON.parse(e.target.result);
+            
+            // Pergunta de segurança antes de sobrescrever
+            if(!confirm("ATENÇÃO: Isso irá substituir todos os dados atuais pelos do arquivo de backup. Deseja continuar?")) {
+                return; // Cancela se o usuário desistir
+            }
+
+            // 3. Restaura os dados no localStorage
+            if(dados.clientes) localStorage.setItem("@limpapiscina/clientes", dados.clientes);
+            if(dados.agendamentos) localStorage.setItem("@limpapiscina/agendamentos", dados.agendamentos);
+            if(dados.extras) localStorage.setItem("@limpapiscina/extras", dados.extras);
+            if(dados.users) localStorage.setItem("@limpapiscina/users", dados.users);
+
+            alert("✅ Dados restaurados com sucesso! A página será recarregada.");
+            location.reload();
+        } catch (err) {
+            alert("Erro ao ler arquivo. O formato parece inválido.");
+        }
+    };
+    reader.readAsText(file);
+}
+
