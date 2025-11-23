@@ -9,7 +9,11 @@
     <script src="js/auth.js"></script>
     <script>checkAuth('admin');</script> <header>
         <div class="logo"><h2>🌊 Painel Admin</h2></div>
-        <nav><a href="#" onclick="logout()">Sair</a></nav>
+        <nav>
+    <a href="agendamentos.html" style="border-bottom: 2px solid white;">Agenda</a>
+    <a href="clientes.html">Clientes</a>
+    <a href="#" onclick="logout()">Sair</a>
+</nav>
     </header>
 
     <main style="display: flex; gap: 20px; flex-wrap: wrap;">
@@ -42,4 +46,5 @@
         });
     </script>
 </body>
+
 </html>
