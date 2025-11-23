@@ -6,15 +6,15 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header><div class="logo"><h2>🌊 LimpaPiscina</h2></div><nav><a href="index.html">Voltar</a></nav></header>
+    <header><div class="logo"><h2>🌊 Cadastro</h2></div><nav><a href="index.html">Voltar</a></nav></header>
     <main style="display:flex; justify-content:center;">
-        <div class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
-            <h2 style="text-align:center; margin-bottom: 1rem;">Criar Conta</h2>
+        <div class="card" style="width: 100%; max-width: 400px;">
+            <h2 style="text-align:center;">Criar Conta</h2>
             <form id="form-cadastro">
-                <label>Nome</label><input type="text" id="nome" required>
-                <label>E-mail</label><input type="email" id="email" required>
-                <label>Senha</label><input type="password" id="senha" required>
-                <label>Tipo</label>
+                <input type="text" id="nome" placeholder="Nome" required>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <label>Tipo de Conta</label>
                 <select id="tipo">
                     <option value="cliente">Cliente</option>
                     <option value="admin">Piscineiro (Admin)</option>
@@ -27,8 +27,8 @@
     <script>
         document.getElementById('form-cadastro').addEventListener('submit', (e) => {
             e.preventDefault();
-            const n = document.getElementById('nome').value, e_mail = document.getElementById('email').value, s = document.getElementById('senha').value, t = document.getElementById('tipo').value;
-            if(registerUser(n, e_mail, s, t)) window.location.href = "login.html";
+            const n=document.getElementById('nome').value, em=document.getElementById('email').value, s=document.getElementById('senha').value, t=document.getElementById('tipo').value;
+            if(registerUser(n, em, s, t)) window.location.href = "login.html";
         });
     </script>
 </body>
