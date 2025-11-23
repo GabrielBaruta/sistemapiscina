@@ -52,3 +52,75 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
 }
 .tag.antes { background: #ff6b6b; }
 .tag.depois { background: #4caf50; }
+
+/* --- 1. BOTÃO FLUTUANTE WHATSAPP --- */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.whatsapp-float:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+}
+
+/* --- 2. ESTILO DE IMPRESSÃO (RECIBO) --- */
+@media print {
+    /* Esconde tudo que não é necessário no papel */
+    header, nav, footer, .btn, .whatsapp-float, #msg-erro, .card form, h2 {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+        font-family: 'Times New Roman', serif; /* Fonte mais formal para documentos */
+    }
+
+    /* Deixa a área de pagamento visível e limpa */
+    #area-pagamento, .checkout-container, .valor-display {
+        display: block !important;
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Adiciona um cabeçalho oficial no topo da folha */
+    main::before {
+        content: "📄 COMPROVANTE DE ASSINATURA - LIMPA PISCINA";
+        font-size: 24px;
+        font-weight: bold;
+        display: block;
+        text-align: center;
+        margin-bottom: 40px;
+        border-bottom: 1px solid #000;
+        padding-bottom: 10px;
+    }
+
+    /* Adiciona rodapé no documento */
+    main::after {
+        content: "Documento gerado eletronicamente em " attr(data-date);
+        font-size: 12px;
+        text-align: center;
+        display: block;
+        margin-top: 50px;
+    }
+}
+
