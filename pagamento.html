@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assinatura | LimpaPiscina</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos específicos para o cartão de crédito */
+        .payment-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .plan-card, .payment-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h2>🌊 Assinatura</h2>
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="loja.html">Loja</a>
+            <a href="pagamento.html" style="border-bottom: 2px solid white;">Planos</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 30px;">Finalizar Contratação</h2>
+
+        <div class="payment-container">
+            
+            <div class="plan-card">
+                <h3 style="margin-bottom: 15px;">Escolha seu Plano</h3>
+                <div style="margin-bottom: 20px; border: 1px solid #eee; padding: 10px; border-radius: 5px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="radio" name="plano" value="mensal" checked>
+                        <div>
+                            <strong>Plano Mensal</strong><br>
+                            <small>R$ 150,00 / mês (1 visita)</small>
+                        </div>
+                    </label>
+                </div>
+                <div style="margin-bottom: 20px; border: 1px solid #eee; padding: 10px; border-radius: 5px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="radio" name="plano" value="semanal">
+                        <div>
+                            <strong>Plano Semanal</strong><br>
+                            <small>R$ 400,00 / mês (4 visitas)</small>
+                        </div>
+                    </label>
+                </div>
+                <div style="margin-bottom: 20px; border: 1px solid #eee; padding: 10px; border-radius: 5px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="radio" name="plano" value="completo">
+                        <div>
+                            <strong>Manutenção Completa</strong><br>
+                            <small>R$ 600,00 / mês (Química inclusa)</small>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="payment-form">
+                <h3 style="margin-bottom: 15px;">Dados de Pagamento</h3>
+                <form id="form-pagamento">
+                    <label>Nome no Cartão</label>
+                    <input type="text" placeholder="Ex: JOAO DA SILVA" required>
+
+                    <label>Número do Cartão</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required>
+
+                    <div class="input-group">
+                        <div style="flex: 1;">
+                            <label>Validade</label>
+                            <input type="text" placeholder="MM/AA" maxlength="5" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label>CVV</label>
+                            <input type="text" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px; background: #28a745;">Confirmar Assinatura</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Lógica Simples de Pagamento (Front-end apenas)
+        document.getElementById('form-pagamento').addEventListener('submit', (e) => {
+            e.preventDefault(); // Não envia de verdade
+            
+            // Simula um processamento de 2 segundos
+            const btn = e.target.querySelector('button');
+            const textoOriginal = btn.innerText;
+            
+            btn.innerText = "Processando...";
+            btn.disabled = true;
+            btn.style.background = "#ccc";
+
+            setTimeout(() => {
+                alert("✅ Pagamento Aprovado!\nBem-vindo ao clube LimpaPiscina.");
+                window.location.href = "index.html";
+            }, 2000);
+        });
+    </script>
+
+</body>
+</html>
