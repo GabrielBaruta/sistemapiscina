@@ -63,32 +63,21 @@
 
     <script src="js/app.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCarrinhoPagina();
-        });
-
-        function mudarPagamento() {
-            const metodo = document.getElementById('metodo-pagamento').value;
-            if(metodo === 'cartao') {
-                document.getElementById('area-cartao').style.display = 'block';
-                document.getElementById('area-pix').style.display = 'none';
-            } else {
-                document.getElementById('area-cartao').style.display = 'none';
-                document.getElementById('area-pix').style.display = 'block';
-            }
-        }
-
         document.getElementById('form-checkout').addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Pega os dados
+            const nome = e.target.querySelector('input[required]').value; // Pega o primeiro input (Nome)
             const endereco = e.target.querySelector('input[placeholder="Rua, Número, Bairro"]').value;
-            const metodo = document.getElementById('metodo-pagamento').value;
+            const metodo = document.getElementById('metodo-pagamento').value.toUpperCase();
             
             if(getCarrinho().length === 0) {
                 alert("Seu carrinho está vazio!");
                 return;
             }
 
-            finalizarCompraLoja(metodo.toUpperCase(), endereco);
+            // Chama a função nova no app.js que SALVA tudo
+            finalizarCompraLoja(nome, endereco, metodo);
         });
     </script>
 </body>
