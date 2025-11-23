@@ -2,143 +2,36 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitar Orçamento | LimpaPiscina</title>
+    <title>Orçamento</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .orcamento-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .info-card, .form-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-        }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: vertical;
-            height: 80px;
-        }
-    </style>
 </head>
 <body>
-
     <header>
-        <div class="logo">
-            <h2>🌊 Visita Técnica</h2>
-        </div>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="loja.html">Loja</a>
-            <a href="pagamento.html" style="border-bottom: 2px solid white;">Orçamento</a>
-            <a href="login.html">Login</a>
-        </nav>
+        <div class="logo"><h2>🌊 Orçamento</h2></div>
+        <nav><a href="index.html">Home</a><a href="loja.html">Loja</a><a href="orcamento.html" style="border-bottom:2px solid white">Orçamento</a><a href="pagamento.html">Pagamento</a><a href="login.html">Login</a></nav>
     </header>
-
-    <main>
-        <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 10px;">Agende uma Avaliação Gratuita</h2>
-        <p style="text-align: center; margin-bottom: 30px; color: #666;">
-            Vamos até sua casa, avaliamos a situação da piscina e passamos o valor exato na hora.
-        </p>
-
-        <div class="orcamento-container">
-            
-            <div class="info-card">
-                <h3 style="margin-bottom: 15px; color: var(--primary-blue);">1. Sobre a Piscina</h3>
-                
-                <label>Qual o tamanho aproximado?</label>
-                <select id="tamanho" style="margin-bottom: 15px;">
-                    <option>Pequena (Até 15 mil litros)</option>
-                    <option>Média (Até 30 mil litros)</option>
-                    <option>Grande (Mais de 40 mil litros)</option>
-                    <option>Não sei dizer</option>
-                </select>
-
-                <label>Como está a cor da água?</label>
-                <select id="cor" style="margin-bottom: 15px;">
-                    <option>Verde (Com algas)</option>
-                    <option>Turva / Branca</option>
-                    <option>Marrom (Barro/Terra)</option>
-                    <option>Cristalina (Apenas manutenção)</option>
-                </select>
-
-                <label>Observações extras</label>
-                <textarea id="obs" placeholder="Ex: A bomba está fazendo barulho estranho..."></textarea>
-            </div>
-
-            <div class="form-card">
-                <h3 style="margin-bottom: 15px; color: var(--primary-blue);">2. Endereço da Visita</h3>
-                <form id="form-orcamento">
-                    <label>Endereço Completo</label>
-                    <input type="text" id="endereco" placeholder="Rua, Número e Bairro" required>
-
-                    <div style="display: flex; gap: 10px;">
-                        <div style="flex: 1;">
-                            <label>Melhor Dia</label>
-                            <input type="date" id="data" required>
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Horário</label>
-                            <select id="hora">
-                                <option>Manhã (08h - 12h)</option>
-                                <option>Tarde (13h - 18h)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <label>Seu WhatsApp</label>
-                    <input type="tel" id="contato" placeholder="(00) 90000-0000" required>
-
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px; background: var(--primary-blue);">Solicitar Visita</button>
-                </form>
-            </div>
-
+    <main style="max-width:600px; margin: 80px auto;">
+        <div class="card">
+            <h2 style="text-align:center; color:var(--primary-blue);">Agendar Visita Técnica</h2>
+            <p style="text-align:center; margin-bottom:20px;">Avaliamos sua piscina e passamos o preço na hora.</p>
+            <form id="form-orcamento">
+                <label>Tamanho/Estado da Piscina</label>
+                <textarea id="obs" placeholder="Ex: Piscina verde, 30 mil litros..." rows="3"></textarea>
+                <label>Endereço</label><input type="text" id="endereco" required>
+                <label>Data Preferida</label><input type="date" id="data" required>
+                <label>WhatsApp</label><input type="tel" id="contato" required>
+                <button type="submit" class="btn" style="width:100%">Solicitar Visita</button>
+            </form>
         </div>
     </main>
-
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script> 
-    
+    <script src="js/app.js"></script>
     <script>
         document.getElementById('form-orcamento').addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Captura os dados do formulário
-            const tamanho = document.getElementById('tamanho').value;
-            const condicao = document.getElementById('cor').value;
-            const endereco = document.getElementById('endereco').value;
-            const data = document.getElementById('data').value;
-            const contato = document.getElementById('contato').value;
-            const obs = document.getElementById('obs').value;
-
-            // Monta uma string de detalhes para o piscineiro ver
-            const detalhes = `Visita técnica. Piscina: ${tamanho}, Água: ${condicao}. Contato: ${contato}. Obs: ${obs}`;
-
-            // Tenta salvar usando a função que já criamos no app.js
-            // OBS: Como o usuário comum não tem "login de admin", isso vai salvar no LocalStorage
-            // mas ele não verá a tabela. Na vida real, isso enviaria um e-mail.
-            
-            // Simulando envio
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Enviando solicitação...";
-            btn.disabled = true;
-
-            setTimeout(() => {
-                alert(`✅ Solicitação enviada com sucesso!\n\nEntraremos em contato pelo WhatsApp ${contato} para confirmar a visita no dia ${data} em ${endereco}.`);
-                window.location.href = "index.html";
-            }, 1500);
+            // Simula salvamento na agenda (padrão)
+            addAgendamento("VISITA TÉCNICA: " + document.getElementById('contato').value, document.getElementById('data').value, "Avaliação", document.getElementById('obs').value + " - " + document.getElementById('endereco').value);
+            alert("Solicitação enviada! Entraremos em contato."); window.location.href="index.html";
         });
     </script>
-
 </body>
 </html>
