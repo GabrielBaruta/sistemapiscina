@@ -19,18 +19,16 @@ function renderAgendamentos() {
     
     tbody.innerHTML = '';
     lista.forEach(item => {
-        // Se tiver observação, o botão fica verde, senão fica cinza
         const temObs = item.obs && item.obs.length > 0;
         const btnStyle = temObs ? "background:#4caf50" : "background:#ccc; cursor:not-allowed";
-        
         tbody.innerHTML += `
             <tr>
                 <td>${item.data}</td>
                 <td><strong>${item.cliente}</strong></td>
                 <td>${item.servico}</td>
                 <td>
-                    <button onclick="verObservacao(${item.id})" class="btn-view" style="${btnStyle}" title="Ver detalhes">👁️ Ver</button>
-                    <button onclick="deleteAgendamento(${item.id})" class="btn-delete" title="Excluir">🗑️</button>
+                    <button onclick="verObservacao(${item.id})" class="btn-view" style="${btnStyle}">👁️</button>
+                    <button onclick="deleteAgendamento(${item.id})" class="btn-delete">🗑️</button>
                 </td>
             </tr>`;
     });
@@ -38,14 +36,11 @@ function renderAgendamentos() {
 
 function verObservacao(id) {
     const item = getAgendamentos().find(i => i.id === id);
-    if(item) {
-        if(!item.obs) return alert("Nenhuma observação registrada.");
-        alert(`📝 DETALHES DO PEDIDO:\n\n"${item.obs}"\n\n📍 Endereço/Info: ${item.cliente}`);
-    }
+    if(item && item.obs) alert(`📝 DETALHES:\n\n"${item.obs}"`);
 }
 
 function deleteAgendamento(id) {
-    if(confirm("Excluir este agendamento?")) {
+    if(confirm("Excluir agendamento?")) {
         const lista = getAgendamentos().filter(i => i.id !== id);
         localStorage.setItem(AGENDAMENTOS_KEY, JSON.stringify(lista));
         renderAgendamentos();
@@ -67,36 +62,75 @@ function addCliente(nome, email, endereco, telefone, valor, descricao) {
     }
     lista.push({ id: Date.now(), nome, email, endereco, telefone, valor, descricao });
     localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
-    alert("Contrato salvo com sucesso!");
+    alert("Contrato salvo!");
     return true;
 }
 
 function renderClientes() {
     const lista = getClientes();
     const tbody = document.getElementById('lista-clientes');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-    lista.forEach(item => {
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>${item.nome}</strong><br><small>${item.email}</small></td>
-                <td>${item.endereco}</td>
-                <td style="color:var(--primary-blue);font-weight:bold;">R$ ${item.valor}</td>
-                <td><button onclick="deleteCliente(${item.id})" class="btn-delete">🗑️ Excluir</button></td>
-            </tr>`;
-    });
+    // Se estivermos na página de clientes, preenche a tabela e o Select de cobrança
+    if(tbody) {
+        tbody.innerHTML = '';
+        lista.forEach(item => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${item.nome}</strong><br><small>${item.email}</small></td>
+                    <td>R$ ${item.valor}</td>
+                    <td><button onclick="deleteCliente(${item.id})" class="btn-delete">🗑️</button></td>
+                </tr>`;
+        });
+        
+        // Preencher o SELECT da área de cobrança extra
+        const select = document.getElementById('cliente-extra');
+        if(select) {
+            select.innerHTML = '<option value="">Selecione o Cliente...</option>';
+            lista.forEach(c => {
+                select.innerHTML += `<option value="${c.email}">${c.nome} (${c.email})</option>`;
+            });
+        }
+    }
 }
 
 function deleteCliente(id) {
-    if(confirm("Tem certeza que deseja EXCLUIR este contrato?\nO cliente perderá acesso à área de pagamento.")) {
+    if(confirm("Excluir contrato?")) {
         const lista = getClientes().filter(i => i.id !== id);
         localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
         renderClientes();
     }
 }
 
-function getMeuPlano(emailLogado) {
-    return getClientes().find(c => c.email === emailLogado); 
+function getMeuPlano(email) { return getClientes().find(c => c.email === email); }
+
+// --- COBRANÇAS EXTRAS (NOVO!) ---
+const EXTRAS_KEY = "@limpapiscina/extras";
+
+function getExtras() {
+    return JSON.parse(localStorage.getItem(EXTRAS_KEY)) || [];
+}
+
+function addExtra(email, descricao, valor) {
+    const lista = getExtras();
+    lista.push({ id: Date.now(), email, descricao, valor, status: 'Pendente' });
+    localStorage.setItem(EXTRAS_KEY, JSON.stringify(lista));
+    alert("Cobrança extra enviada ao cliente!");
+}
+
+function getMinhasExtras(email) {
+    return getExtras().filter(e => e.email === email && e.status === 'Pendente');
+}
+
+function pagarExtra(id) {
+    const lista = getExtras();
+    const item = lista.find(e => e.id === id);
+    if(item) {
+        item.status = 'Pago'; // Marca como pago (na vida real removeriamos ou arquivariamos)
+        // Ou podemos remover da lista para sumir da tela:
+        const novaLista = lista.filter(e => e.id !== id);
+        localStorage.setItem(EXTRAS_KEY, JSON.stringify(novaLista));
+        return true;
+    }
+    return false;
 }
 
 // --- LOJA ---
