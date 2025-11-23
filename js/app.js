@@ -38,7 +38,7 @@ function deleteAgendamento(id) {
     }
 }
 
-// --- GESTÃO DE CLIENTES (NOVO) ---
+// --- GESTÃO DE CLIENTES ---
 const CLIENTES_KEY = "@limpapiscina/clientes";
 
 function getClientes() {
@@ -76,4 +76,47 @@ function deleteCliente(id) {
         localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
         renderClientes();
     }
+}
+
+// --- LOJA (NOVO) ---
+const PRODUTOS = [
+    {
+        id: 1,
+        nome: 'Cloro Granulado 10kg',
+        descricao: 'Cloro estabilizado de alta qualidade.',
+        preco: 189.90,
+        imagem: 'https://via.placeholder.com/300?text=Cloro'
+    },
+    {
+        id: 2,
+        nome: 'Algicida de Choque',
+        descricao: 'Elimina algas e previne água verde.',
+        preco: 45.50,
+        imagem: 'https://via.placeholder.com/300?text=Algicida'
+    },
+    {
+        id: 3,
+        nome: 'Limpa Bordas',
+        descricao: 'Detergente especial para bordas.',
+        preco: 22.00,
+        imagem: 'https://via.placeholder.com/300?text=Limpa+Bordas'
+    }
+];
+
+function renderLoja() {
+    const container = document.getElementById('lista-produtos');
+    if(!container) return;
+
+    container.innerHTML = '';
+    PRODUTOS.forEach(prod => {
+        container.innerHTML += `
+            <div class="card" style="text-align: center;">
+                <img src="${prod.imagem}" alt="${prod.nome}" style="width:100%; border-radius: 5px;">
+                <h3 style="margin: 10px 0;">${prod.nome}</h3>
+                <p style="font-size: 0.9rem; color: #666;">${prod.descricao}</p>
+                <h4 style="color: var(--primary-blue); margin: 10px 0;">R$ ${prod.preco.toFixed(2)}</h4>
+                <button class="btn" onclick="alert('Adicionado ao carrinho!')">Comprar</button>
+            </div>
+        `;
+    });
 }
