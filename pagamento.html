@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .extra-alert { background: #fff3e0; border: 1px solid #ffe0b2; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .extra-alert h4 { color: #e65100; margin-bottom: 5px; }
         .valor-display { background:#e3f2fd; color:#0d47a1; padding:20px; text-align:center; border-radius:8px; border:1px solid #90caf9; margin-bottom:20px;}
+        
+        /* Estilo do Recibo (Invisível por padrão) */
+        #recibo { display: none; border: 2px dashed #333; padding: 30px; margin-top: 20px; background: #fffff0; }
+        #recibo h2 { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -22,32 +25,48 @@
     </header>
     <main style="max-width:600px; margin: 80px auto;">
         
-        <div id="area-extras" style="display:none;">
-            <h3 style="color:#e65100; margin-bottom:10px;">⚠️ Pagamentos Pendentes</h3>
-            <div id="lista-extras"></div>
+        <div id="recibo" class="card">
+            <h2>✅ COMPROVANTE DE PAGAMENTO</h2>
+            <p><strong>Empresa:</strong> LimpaPiscina Serviços</p>
+            <p><strong>Cliente:</strong> <span id="recibo-cliente">Nome</span></p>
+            <p><strong>Valor Pago:</strong> <span id="recibo-valor">R$ 0,00</span></p>
+            <p><strong>Data:</strong> <span id="recibo-data">00/00/0000</span></p>
+            <p><strong>Descrição:</strong> Mensalidade / Manutenção de Piscina</p>
+            <br>
+            <p style="text-align:center; font-size:0.8rem;">Este documento comprova a quitação do serviço acima.</p>
+            <br>
+            <button onclick="window.print()" class="btn" style="width:100%; background:#333;">🖨️ Imprimir Comprovante</button>
+            <a href="index.html" class="btn" style="display:block; text-align:center; margin-top:10px; background:#ccc; color:#333;">Voltar ao Início</a>
         </div>
 
-        <div id="area-pagamento" class="card" style="display:none; margin-top:30px;">
-            <h2 style="text-align:center; color:var(--primary-blue);">Assinatura Mensal</h2>
-            <div class="valor-display">
-                <p>VALOR CONTRATADO</p>
-                <h3 id="valor-mostra">R$ 0,00</h3>
-                <p id="desc-mostra" style="font-style:italic; font-size:0.9rem; margin-top:5px;">...</p>
+        <div id="conteudo-pagamento">
+            <div id="area-extras" style="display:none;">
+                <h3 style="color:#e65100;">⚠️ Pagamentos Pendentes</h3>
+                <div id="lista-extras"></div>
             </div>
-            <form id="form-assinatura">
-                <label>Cartão de Crédito</label>
-                <input type="text" placeholder="0000 0000 0000 0000" required>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" placeholder="MM/AA" required>
-                    <input type="text" placeholder="CVV" required>
-                </div>
-                <button type="submit" class="btn" style="width:100%">Pagar Mensalidade</button>
-            </form>
-        </div>
 
-        <div id="msg-erro" class="card" style="display:none; text-align:center;">
-            <h2 style="color:#d32f2f;">Sem contrato ativo</h2>
-            <p>Aguarde a visita técnica para definição de valores.</p>
+            <div id="area-pagamento" class="card" style="display:none; margin-top:30px;">
+                <h2 style="text-align:center; color:var(--primary-blue);">Assinatura Mensal</h2>
+                <div class="valor-display">
+                    <p>VALOR CONTRATADO</p>
+                    <h3 id="valor-mostra">R$ 0,00</h3>
+                    <p id="desc-mostra" style="font-style:italic; font-size:0.9rem; margin-top:5px;">...</p>
+                </div>
+                <form id="form-assinatura">
+                    <label>Cartão de Crédito</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" required>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" placeholder="MM/AA" required>
+                        <input type="text" placeholder="CVV" required>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%">Pagar Mensalidade</button>
+                </form>
+            </div>
+
+            <div id="msg-erro" class="card" style="display:none; text-align:center;">
+                <h2 style="color:#d32f2f;">Sem contrato ativo</h2>
+                <p>Aguarde a visita técnica para definição de valores.</p>
+            </div>
         </div>
 
     </main>
@@ -58,45 +77,40 @@
         document.addEventListener('DOMContentLoaded', () => {
             const session = localStorage.getItem("@limpapiscina/session");
             if (session) {
+                const user = JSON.parse(session);
                 const nav = document.getElementById('menu-nav');
                 const btnLogin = document.getElementById('btn-login');
+                
                 const linkPagamento = document.createElement('a');
                 linkPagamento.href = "pagamento.html"; linkPagamento.innerText = "Pagamento";
-                linkPagamento.style.borderBottom = "2px solid white"; // Destaque
+                linkPagamento.style.borderBottom = "2px solid white";
                 nav.insertBefore(linkPagamento, btnLogin);
+                
                 btnLogin.innerText = "Sair"; btnLogin.href = "#"; btnLogin.onclick = logout;
                 
-                carregarFinanceiro(JSON.parse(session));
+                carregarFinanceiro(user);
             } else {
                 alert("Faça login."); window.location.href = "login.html";
             }
         });
 
         function carregarFinanceiro(user) {
-            // 1. Carregar Extras
+            // Extras
             const extras = getMinhasExtras(user.email);
-            const areaExtras = document.getElementById('area-extras');
-            const listaExtras = document.getElementById('lista-extras');
-
             if(extras.length > 0) {
-                areaExtras.style.display = 'block';
-                listaExtras.innerHTML = '';
+                document.getElementById('area-extras').style.display = 'block';
+                const lista = document.getElementById('lista-extras');
+                lista.innerHTML = '';
                 extras.forEach(item => {
-                    listaExtras.innerHTML += `
+                    lista.innerHTML += `
                         <div class="extra-alert">
-                            <div>
-                                <h4>${item.descricao}</h4>
-                                <span>Valor: <strong>R$ ${parseFloat(item.valor).toFixed(2)}</strong></span>
-                            </div>
+                            <div><h4>${item.descricao}</h4><span>R$ ${parseFloat(item.valor).toFixed(2)}</span></div>
                             <button onclick="pagarItemExtra(${item.id})" class="btn" style="background:#e65100;">Pagar</button>
-                        </div>
-                    `;
+                        </div>`;
                 });
-            } else {
-                areaExtras.style.display = 'none';
             }
 
-            // 2. Carregar Plano Mensal
+            // Mensal
             const plano = getMeuPlano(user.email);
             if (plano && plano.valor) {
                 document.getElementById('area-pagamento').style.display = 'block';
@@ -107,18 +121,34 @@
             }
         }
 
-        // Função para simular pagamento do extra
+        // Pagar Extra
         window.pagarItemExtra = function(id) {
-            if(confirm("Confirmar pagamento deste item avulso com o cartão cadastrado?")) {
-                pagarExtra(id); // Função do app.js que remove da lista
-                alert("✅ Pagamento avulso confirmado!");
-                location.reload(); // Recarrega para sumir o item
+            if(confirm("Pagar agora?")) {
+                pagarExtra(id); alert("Pagamento avulso recebido!"); location.reload();
             }
         }
 
+        // Pagar Mensalidade e GERAR RECIBO
         document.getElementById('form-assinatura').addEventListener('submit', (e)=>{ 
-            e.preventDefault(); alert("✅ Mensalidade paga com sucesso!"); window.location.href="index.html"; 
+            e.preventDefault();
+            
+            const session = JSON.parse(localStorage.getItem("@limpapiscina/session"));
+            const plano = getMeuPlano(session.email);
+
+            // 1. Atualiza status no sistema (Admin verá "Pago")
+            confirmarPagamentoMensal(session.email);
+
+            // 2. Esconde formulários
+            document.getElementById('conteudo-pagamento').style.display = 'none';
+
+            // 3. Preenche e mostra Recibo
+            document.getElementById('recibo-cliente').innerText = session.nome;
+            document.getElementById('recibo-valor').innerText = "R$ " + parseFloat(plano.valor).toFixed(2);
+            document.getElementById('recibo-data').innerText = new Date().toLocaleString();
+            document.getElementById('recibo').style.display = 'block';
         });
     </script>
+    
+    <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank">💬</a>
 </body>
 </html>
