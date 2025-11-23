@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Produto</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><h2>🌊 Loja</h2></div>
+        <nav>
+            <a href="loja.html">Voltar para Loja</a>
+            <a href="carrinho.html" class="cart-icon-container">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="cart-badge" style="display:none;">0</span>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="produto-container" class="product-detail">
+            <p>Carregando produto...</p>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarIconeCarrinho();
+            
+            const produto = getProdutoPorUrl(); // Função nova no app.js
+            const container = document.getElementById('produto-container');
+
+            if (produto) {
+                container.innerHTML = `
+                    <div class="product-image">
+                        <img src="${produto.imagem}" alt="${produto.nome}">
+                    </div>
+                    <div class="product-info">
+                        <h1 style="color:var(--primary-blue); margin-bottom:10px;">${produto.nome}</h1>
+                        <p style="font-size:1.1rem; line-height:1.8; color:#555; margin-bottom:20px;">
+                            ${produto.descricao}
+                        </p>
+                        <h2 style="color:#333; margin-bottom:20px; font-size:2rem;">R$ ${produto.preco.toFixed(2)}</h2>
+                        
+                        <button onclick="adicionarAoCarrinho(${produto.id})" class="btn" style="font-size:1.2rem; padding:15px;">
+                            Adicionar ao Carrinho <i class="fas fa-cart-plus"></i>
+                        </button>
+                        <br>
+                        <a href="carrinho.html" style="text-align:center; color:var(--primary-blue); text-decoration:none;">Ir para o Carrinho &rarr;</a>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = "<h2>Produto não encontrado.</h2><a href='loja.html' class='btn'>Voltar</a>";
+            }
+        });
+    </script>
+</body>
+</html>
