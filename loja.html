@@ -2,8 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Loja</title>
+    <title>Loja | LimpaPiscina</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
@@ -12,37 +13,40 @@
             <a href="index.html">Home</a>
             <a href="loja.html" style="border-bottom:2px solid white">Loja</a>
             <a href="orcamento.html">Orçamento</a>
-            <a href="login.html" id="btn-login">Login</a>
+            
+            <a href="carrinho.html" class="cart-icon-container">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="cart-badge" style="display:none;">0</span>
+            </a>
+
+            <a href="login.html" id="btn-login" style="margin-left: 20px;">Login</a>
         </nav>
     </header>
+
     <main>
-        <h2 style="text-align:center; margin-bottom:20px;">Produtos Profissionais</h2>
-        <div id="lista-produtos" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;"></div>
+        <h2 style="text-align:center; margin-bottom:20px; color:var(--primary-blue);">Produtos Profissionais</h2>
+        <p style="text-align:center; margin-bottom:30px; color:#666;">Entregamos em toda a cidade. Aproveite!</p>
+        
+        <div id="lista-produtos" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+            </div>
     </main>
+
+    <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank">💬</a>
+
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             renderLoja();
-            
-            // LÓGICA DE MENU DINÂMICO
+            // Menu Dinâmico (Login/Sair)
             const session = localStorage.getItem("@limpapiscina/session");
             if (session) {
-                // 1. Cria o botão de Pagamento
                 const nav = document.getElementById('menu-nav');
                 const btnLogin = document.getElementById('btn-login');
-                
                 const linkPagamento = document.createElement('a');
-                linkPagamento.href = "pagamento.html";
-                linkPagamento.innerText = "Pagamento";
-                
-                // Insere ANTES do botão de Login/Sair
-                nav.insertBefore(linkPagamento, btnLogin);
-
-                // 2. Transforma botão Login em Sair
-                btnLogin.innerText = "Sair";
-                btnLogin.href = "#";
-                btnLogin.onclick = logout;
+                linkPagamento.href = "pagamento.html"; linkPagamento.innerText = "Pagamento";
+                nav.insertBefore(linkPagamento, btnLogin); // Insere antes do login
+                btnLogin.innerText = "Sair"; btnLogin.href = "#"; btnLogin.onclick = logout;
             }
         });
     </script>
