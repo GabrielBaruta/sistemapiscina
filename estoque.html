@@ -68,20 +68,26 @@
         document.addEventListener('DOMContentLoaded', renderTabelaEstoque);
 
         function renderTabelaEstoque() {
-            const produtos = getProdutos(); // Função nova no app.js
+            const produtos = getProdutos(); // Busca do LocalStorage
             const tbody = document.getElementById('lista-estoque');
             tbody.innerHTML = '';
             
+            if (produtos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum produto no estoque.</td></tr>';
+                return;
+            }
+
             produtos.forEach(p => {
-                // Alerta visual se estoque for baixo
+                // Alerta visual se estoque for baixo (menos de 5 unidades)
                 const corEstoque = p.estoque < 5 ? 'color:red; font-weight:bold;' : 'color:green;';
                 
+                // CORREÇÃO FEITA AQUI: Usando a variável 'corEstoque' corretamente
                 tbody.innerHTML += `
                     <tr>
                         <td><img src="${p.imagem}" style="width:40px; height:40px; border-radius:4px; object-fit:cover;"></td>
                         <td><strong>${p.nome}</strong></td>
                         <td>R$ ${p.preco.toFixed(2)}</td>
-                        <td style="${corStatus}">${p.estoque} un</td>
+                        <td style="${corEstoque}">${p.estoque} un</td>
                         <td>
                             <button onclick="removerProduto(${p.id})" class="btn-delete">🗑️</button>
                         </td>
