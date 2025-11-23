@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho | Finalizar Compra</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><h2>🌊 Carrinho</h2></div>
+        <nav><a href="loja.html">Continuar Comprando</a></nav>
+    </header>
+
+    <main style="max-width: 800px; margin: 80px auto;">
+        
+        <h2 style="color:var(--primary-blue); margin-bottom:20px;">Seu Pedido</h2>
+        
+        <div id="itens-carrinho"></div>
+
+        <div class="cart-summary">
+            <h3 style="margin-bottom:10px;">Total: <span id="total-carrinho" style="color:var(--primary-blue); font-size:1.5rem;">R$ 0,00</span></h3>
+        </div>
+
+        <div class="card" style="margin-top:30px;">
+            <h3 style="margin-bottom:20px;">Dados de Entrega e Pagamento</h3>
+            <form id="form-checkout">
+                
+                <label>Nome Completo</label>
+                <input type="text" required>
+                
+                <label>Endereço de Entrega</label>
+                <input type="text" placeholder="Rua, Número, Bairro" required>
+
+                <label>Forma de Pagamento</label>
+                <select id="metodo-pagamento" onchange="mudarPagamento()" required>
+                    <option value="pix">PIX (5% de desconto)</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                </select>
+
+                <div id="area-cartao" style="display:none; border:1px solid #eee; padding:15px; margin-bottom:15px; border-radius:5px;">
+                    <label>Parcelamento</label>
+                    <select>
+                        <option>À vista</option>
+                        <option>2x sem juros</option>
+                        <option>3x sem juros</option>
+                    </select>
+                    <input type="text" placeholder="Número do Cartão" style="margin-top:10px;">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" placeholder="MM/AA">
+                        <input type="text" placeholder="CVV">
+                    </div>
+                </div>
+
+                <div id="area-pix" style="background:#e8f5e9; padding:15px; margin-bottom:15px; border-radius:5px; text-align:center;">
+                    <p><strong>Chave PIX:</strong> cnpj@limpapiscina.com.br</p>
+                    <small>Envie o comprovante após finalizar.</small>
+                </div>
+
+                <button type="submit" class="btn" style="width:100%; font-size:1.1rem;">Finalizar Compra</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCarrinhoPagina();
+        });
+
+        function mudarPagamento() {
+            const metodo = document.getElementById('metodo-pagamento').value;
+            if(metodo === 'cartao') {
+                document.getElementById('area-cartao').style.display = 'block';
+                document.getElementById('area-pix').style.display = 'none';
+            } else {
+                document.getElementById('area-cartao').style.display = 'none';
+                document.getElementById('area-pix').style.display = 'block';
+            }
+        }
+
+        document.getElementById('form-checkout').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const endereco = e.target.querySelector('input[placeholder="Rua, Número, Bairro"]').value;
+            const metodo = document.getElementById('metodo-pagamento').value;
+            
+            if(getCarrinho().length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+
+            finalizarCompraLoja(metodo.toUpperCase(), endereco);
+        });
+    </script>
+</body>
+</html>
