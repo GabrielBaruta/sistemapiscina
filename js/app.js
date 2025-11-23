@@ -60,7 +60,8 @@ function addCliente(nome, email, endereco, telefone, valor, descricao) {
     if(lista.find(c => c.email === email)) {
         alert("Já existe um contrato para este e-mail!"); return false;
     }
-    lista.push({ id: Date.now(), nome, email, endereco, telefone, valor, descricao });
+    // Adicionamos 'ultimoPagamento' nulo no inicio
+    lista.push({ id: Date.now(), nome, email, endereco, telefone, valor, descricao, ultimoPagamento: null });
     localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
     alert("Contrato salvo!");
     return true;
@@ -69,19 +70,35 @@ function addCliente(nome, email, endereco, telefone, valor, descricao) {
 function renderClientes() {
     const lista = getClientes();
     const tbody = document.getElementById('lista-clientes');
-    // Se estivermos na página de clientes, preenche a tabela e o Select de cobrança
+    
+    // Lógica para definir status PAGO ou PENDENTE
+    const hoje = new Date();
+    
     if(tbody) {
         tbody.innerHTML = '';
         lista.forEach(item => {
+            let statusHtml = '<span style="color:orange; font-weight:bold;">⚠️ PENDENTE</span>';
+            
+            if (item.ultimoPagamento) {
+                const dataPag = new Date(item.ultimoPagamento);
+                // Se pagou nos últimos 30 dias
+                const diffTime = Math.abs(hoje - dataPag);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                
+                if(diffDays <= 30) {
+                    statusHtml = `<span style="color:green; font-weight:bold;">✅ PAGO</span><br><small style="color:#666">em ${dataPag.toLocaleDateString()}</small>`;
+                }
+            }
+
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${item.nome}</strong><br><small>${item.email}</small></td>
                     <td>R$ ${item.valor}</td>
+                    <td>${statusHtml}</td>
                     <td><button onclick="deleteCliente(${item.id})" class="btn-delete">🗑️</button></td>
                 </tr>`;
         });
         
-        // Preencher o SELECT da área de cobrança extra
         const select = document.getElementById('cliente-extra');
         if(select) {
             select.innerHTML = '<option value="">Selecione o Cliente...</option>';
@@ -102,35 +119,38 @@ function deleteCliente(id) {
 
 function getMeuPlano(email) { return getClientes().find(c => c.email === email); }
 
-// --- COBRANÇAS EXTRAS (NOVO!) ---
+// Função para Registrar Pagamento Mensal
+function confirmarPagamentoMensal(email) {
+    const lista = getClientes();
+    const clienteIndex = lista.findIndex(c => c.email === email);
+    
+    if(clienteIndex >= 0) {
+        lista[clienteIndex].ultimoPagamento = Date.now(); // Salva a data de hoje
+        localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
+        return true;
+    }
+    return false;
+}
+
+// --- COBRANÇAS EXTRAS ---
 const EXTRAS_KEY = "@limpapiscina/extras";
 
-function getExtras() {
-    return JSON.parse(localStorage.getItem(EXTRAS_KEY)) || [];
-}
+function getExtras() { return JSON.parse(localStorage.getItem(EXTRAS_KEY)) || []; }
 
 function addExtra(email, descricao, valor) {
     const lista = getExtras();
     lista.push({ id: Date.now(), email, descricao, valor, status: 'Pendente' });
     localStorage.setItem(EXTRAS_KEY, JSON.stringify(lista));
-    alert("Cobrança extra enviada ao cliente!");
+    alert("Cobrança extra enviada!");
 }
 
-function getMinhasExtras(email) {
-    return getExtras().filter(e => e.email === email && e.status === 'Pendente');
-}
+function getMinhasExtras(email) { return getExtras().filter(e => e.email === email && e.status === 'Pendente'); }
 
 function pagarExtra(id) {
     const lista = getExtras();
-    const item = lista.find(e => e.id === id);
-    if(item) {
-        item.status = 'Pago'; // Marca como pago (na vida real removeriamos ou arquivariamos)
-        // Ou podemos remover da lista para sumir da tela:
-        const novaLista = lista.filter(e => e.id !== id);
-        localStorage.setItem(EXTRAS_KEY, JSON.stringify(novaLista));
-        return true;
-    }
-    return false;
+    const novaLista = lista.filter(e => e.id !== id); // Remove da lista ao pagar
+    localStorage.setItem(EXTRAS_KEY, JSON.stringify(novaLista));
+    return true;
 }
 
 // --- LOJA ---
@@ -154,23 +174,19 @@ function renderLoja() {
     });
 }
 
-// --- SISTEMA DE BACKUP (NOVO) ---
-
+// --- SISTEMA DE BACKUP ---
 function exportarDados() {
-    // 1. Reúne todos os dados do localStorage num único objeto
     const backup = {
-        clientes: localStorage.getItem("@limpapiscina/clientes"),
-        agendamentos: localStorage.getItem("@limpapiscina/agendamentos"),
-        extras: localStorage.getItem("@limpapiscina/extras"),
+        clientes: localStorage.getItem(CLIENTES_KEY),
+        agendamentos: localStorage.getItem(AGENDAMENTOS_KEY),
+        extras: localStorage.getItem(EXTRAS_KEY),
         users: localStorage.getItem("@limpapiscina/users"),
-        dataBackup: new Date().toLocaleString()
+        data: new Date().toLocaleString()
     };
-
-    // 2. Cria um arquivo JSON invisível para download
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "backup_limpapiscina_" + Date.now() + ".json");
+    downloadAnchorNode.setAttribute("download", "backup_limpapiscina.json");
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -179,29 +195,18 @@ function exportarDados() {
 function importarDados(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
             const dados = JSON.parse(e.target.result);
-            
-            // Pergunta de segurança antes de sobrescrever
-            if(!confirm("ATENÇÃO: Isso irá substituir todos os dados atuais pelos do arquivo de backup. Deseja continuar?")) {
-                return; // Cancela se o usuário desistir
+            if(confirm("Restaurar backup? Isso apagará os dados atuais.")) {
+                if(dados.clientes) localStorage.setItem(CLIENTES_KEY, dados.clientes);
+                if(dados.agendamentos) localStorage.setItem(AGENDAMENTOS_KEY, dados.agendamentos);
+                if(dados.extras) localStorage.setItem(EXTRAS_KEY, dados.extras);
+                if(dados.users) localStorage.setItem("@limpapiscina/users", dados.users);
+                alert("Dados restaurados!"); location.reload();
             }
-
-            // 3. Restaura os dados no localStorage
-            if(dados.clientes) localStorage.setItem("@limpapiscina/clientes", dados.clientes);
-            if(dados.agendamentos) localStorage.setItem("@limpapiscina/agendamentos", dados.agendamentos);
-            if(dados.extras) localStorage.setItem("@limpapiscina/extras", dados.extras);
-            if(dados.users) localStorage.setItem("@limpapiscina/users", dados.users);
-
-            alert("✅ Dados restaurados com sucesso! A página será recarregada.");
-            location.reload();
-        } catch (err) {
-            alert("Erro ao ler arquivo. O formato parece inválido.");
-        }
+        } catch (err) { alert("Erro no arquivo."); }
     };
     reader.readAsText(file);
 }
-
