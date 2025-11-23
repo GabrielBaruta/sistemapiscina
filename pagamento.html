@@ -2,59 +2,123 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Pagamento</title>
+    <title>Pagamentos</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        .extra-alert { background: #fff3e0; border: 1px solid #ffe0b2; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .extra-alert h4 { color: #e65100; margin-bottom: 5px; }
         .valor-display { background:#e3f2fd; color:#0d47a1; padding:20px; text-align:center; border-radius:8px; border:1px solid #90caf9; margin-bottom:20px;}
-        .contract-desc { font-style:italic; color:#555; margin-top:10px; }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo"><h2>🌊 Pagamento</h2></div>
-        <nav><a href="index.html">Home</a><a href="loja.html">Loja</a><a href="orcamento.html">Orçamento</a><a href="pagamento.html" style="border-bottom:2px solid white">Pagamento</a><a href="login.html">Login</a></nav>
+        <div class="logo"><h2>🌊 Pagamentos</h2></div>
+        <nav id="menu-nav">
+            <a href="index.html">Home</a>
+            <a href="loja.html">Loja</a>
+            <a href="orcamento.html">Orçamento</a>
+            <a href="login.html" id="btn-login">Login</a>
+        </nav>
     </header>
     <main style="max-width:600px; margin: 80px auto;">
         
-        <div id="msg-erro" class="card" style="display:none; text-align:center;">
-            <h2 style="color:#d32f2f;">Contrato não encontrado</h2>
-            <p>O piscineiro ainda não cadastrou seu contrato.</p>
-            <a href="orcamento.html" class="btn" style="margin-top:10px; display:inline-block;">Solicitar Visita</a>
+        <div id="area-extras" style="display:none;">
+            <h3 style="color:#e65100; margin-bottom:10px;">⚠️ Pagamentos Pendentes</h3>
+            <div id="lista-extras"></div>
         </div>
 
-        <div id="area-pagamento" class="card" style="display:none;">
-            <h2 style="text-align:center; color:var(--primary-blue);">Assinar Contrato</h2>
+        <div id="area-pagamento" class="card" style="display:none; margin-top:30px;">
+            <h2 style="text-align:center; color:var(--primary-blue);">Assinatura Mensal</h2>
             <div class="valor-display">
-                <p>VALOR MENSAL</p>
+                <p>VALOR CONTRATADO</p>
                 <h3 id="valor-mostra">R$ 0,00</h3>
-                <p id="desc-mostra" class="contract-desc">...</p>
+                <p id="desc-mostra" style="font-style:italic; font-size:0.9rem; margin-top:5px;">...</p>
             </div>
             <form id="form-assinatura">
-                <label>Frequência</label><select><option>Mensal</option><option>Anual</option></select>
-                <label>Nome no Cartão</label><input type="text" required>
-                <label>Número do Cartão</label><input type="text" placeholder="0000 0000 0000 0000" required>
-                <div style="display:flex; gap:10px;"><input type="text" placeholder="MM/AA" required><input type="text" placeholder="CVV" required></div>
-                <button type="submit" class="btn" style="width:100%">Confirmar Assinatura</button>
+                <label>Cartão de Crédito</label>
+                <input type="text" placeholder="0000 0000 0000 0000" required>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" placeholder="MM/AA" required>
+                    <input type="text" placeholder="CVV" required>
+                </div>
+                <button type="submit" class="btn" style="width:100%">Pagar Mensalidade</button>
             </form>
         </div>
+
+        <div id="msg-erro" class="card" style="display:none; text-align:center;">
+            <h2 style="color:#d32f2f;">Sem contrato ativo</h2>
+            <p>Aguarde a visita técnica para definição de valores.</p>
+        </div>
+
     </main>
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
     <script>
-        const sessionStr = localStorage.getItem("@limpapiscina/session");
-        if (!sessionStr) { alert("Faça login primeiro."); window.location.href = "login.html"; }
-        else {
-            const user = JSON.parse(sessionStr);
-            const plano = getMeuPlano(user.email); // Busca no 'banco de dados'
+        // Menu Dinâmico
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = localStorage.getItem("@limpapiscina/session");
+            if (session) {
+                const nav = document.getElementById('menu-nav');
+                const btnLogin = document.getElementById('btn-login');
+                const linkPagamento = document.createElement('a');
+                linkPagamento.href = "pagamento.html"; linkPagamento.innerText = "Pagamento";
+                linkPagamento.style.borderBottom = "2px solid white"; // Destaque
+                nav.insertBefore(linkPagamento, btnLogin);
+                btnLogin.innerText = "Sair"; btnLogin.href = "#"; btnLogin.onclick = logout;
+                
+                carregarFinanceiro(JSON.parse(session));
+            } else {
+                alert("Faça login."); window.location.href = "login.html";
+            }
+        });
+
+        function carregarFinanceiro(user) {
+            // 1. Carregar Extras
+            const extras = getMinhasExtras(user.email);
+            const areaExtras = document.getElementById('area-extras');
+            const listaExtras = document.getElementById('lista-extras');
+
+            if(extras.length > 0) {
+                areaExtras.style.display = 'block';
+                listaExtras.innerHTML = '';
+                extras.forEach(item => {
+                    listaExtras.innerHTML += `
+                        <div class="extra-alert">
+                            <div>
+                                <h4>${item.descricao}</h4>
+                                <span>Valor: <strong>R$ ${parseFloat(item.valor).toFixed(2)}</strong></span>
+                            </div>
+                            <button onclick="pagarItemExtra(${item.id})" class="btn" style="background:#e65100;">Pagar</button>
+                        </div>
+                    `;
+                });
+            } else {
+                areaExtras.style.display = 'none';
+            }
+
+            // 2. Carregar Plano Mensal
+            const plano = getMeuPlano(user.email);
             if (plano && plano.valor) {
                 document.getElementById('area-pagamento').style.display = 'block';
                 document.getElementById('valor-mostra').innerText = parseFloat(plano.valor).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-                document.getElementById('desc-mostra').innerText = `"${plano.descricao}"`;
+                document.getElementById('desc-mostra').innerText = plano.descricao;
             } else {
                 document.getElementById('msg-erro').style.display = 'block';
             }
         }
-        document.getElementById('form-assinatura').addEventListener('submit', (e)=>{ e.preventDefault(); alert("Assinatura confirmada!"); window.location.href="index.html"; });
+
+        // Função para simular pagamento do extra
+        window.pagarItemExtra = function(id) {
+            if(confirm("Confirmar pagamento deste item avulso com o cartão cadastrado?")) {
+                pagarExtra(id); // Função do app.js que remove da lista
+                alert("✅ Pagamento avulso confirmado!");
+                location.reload(); // Recarrega para sumir o item
+            }
+        }
+
+        document.getElementById('form-assinatura').addEventListener('submit', (e)=>{ 
+            e.preventDefault(); alert("✅ Mensalidade paga com sucesso!"); window.location.href="index.html"; 
+        });
     </script>
 </body>
 </html>
