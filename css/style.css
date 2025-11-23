@@ -225,7 +225,7 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
 
 /* 1. O Texto (O Balão Branco) */
 .whatsapp-float::before {
-    content: "Converse diretamente comigo!"; /* O texto que você quer */
+    content: "Converse diretamente conosco!"; /* O texto que você quer */
     position: absolute;
     right: 75px;       /* Empurra para a esquerda do botão */
     top: 50%;          /* Posiciona no meio verticalmente */
@@ -284,3 +284,4 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
         display: none;
     }
 }
+
