@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Vendas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <script src="js/auth.js"></script>
+    <script>checkAuth('admin');</script>
+    
+    <header>
+        <div class="logo"><h2>🌊 Gestão</h2></div>
+        <nav>
+            <a href="agendamentos.html">Agenda</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="vendas.html" style="border-bottom: 2px solid white;">Vendas</a>
+            <a href="#" onclick="logout()">Sair</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="color: var(--primary-blue);">📦 Controle de Pedidos da Loja</h3>
+                <button onclick="renderVendas()" class="btn" style="background:#eee; color:#333;">🔄 Atualizar</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-vendas">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', renderVendas);
+
+        function renderVendas() {
+            const vendas = getVendas(); // Função nova no app.js
+            const tbody = document.getElementById('lista-vendas');
+            
+            // Ordena do mais recente para o mais antigo
+            vendas.sort((a, b) => b.id - a.id);
+
+            tbody.innerHTML = '';
+            if(vendas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma venda registrada.</td></tr>';
+                return;
+            }
+
+            vendas.forEach(v => {
+                // Cores do status
+                let corStatus = "#ccc";
+                if(v.status === 'Pendente') corStatus = "#ff9800"; // Laranja
+                if(v.status === 'Enviado') corStatus = "#2196f3";  // Azul
+                if(v.status === 'Entregue') corStatus = "#4caf50"; // Verde
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${v.data}</td>
+                        <td>
+                            <strong>${v.cliente}</strong><br>
+                            <small>${v.metodo}</small>
+                        </td>
+                        <td style="font-weight:bold;">R$ ${v.total.toFixed(2)}</td>
+                        <td>
+                            <select onchange="mudarStatus(${v.id}, this.value)" style="padding:5px; border-radius:4px; border:1px solid ${corStatus}; color:${corStatus}; font-weight:bold;">
+                                <option value="Pendente" ${v.status==='Pendente'?'selected':''}>Pendente</option>
+                                <option value="Enviado" ${v.status==='Enviado'?'selected':''}>Enviado</option>
+                                <option value="Entregue" ${v.status==='Entregue'?'selected':''}>Entregue</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button onclick="verItensVenda(${v.id})" class="btn" style="background:#0077b6; padding:5px 10px;">📦 Ver Itens</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function mudarStatus(id, novoStatus) {
+            atualizarStatusVenda(id, novoStatus);
+            renderVendas(); // Atualiza a cor do select
+        }
+    </script>
+</body>
+</html>
