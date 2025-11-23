@@ -8,7 +8,12 @@
 <body>
     <header>
         <div class="logo"><h2>🌊 Orçamento</h2></div>
-        <nav><a href="index.html">Home</a><a href="loja.html">Loja</a><a href="orcamento.html" style="border-bottom:2px solid white">Orçamento</a><a href="pagamento.html">Pagamento</a><a href="login.html">Login</a></nav>
+        <nav id="menu-nav">
+            <a href="index.html">Home</a>
+            <a href="loja.html">Loja</a>
+            <a href="orcamento.html" style="border-bottom:2px solid white">Orçamento</a>
+            <a href="login.html" id="btn-login">Login</a>
+        </nav>
     </header>
     <main style="max-width:600px; margin: 80px auto;">
         <div class="card">
@@ -25,10 +30,29 @@
         </div>
     </main>
     <script src="js/app.js"></script>
-    <script>
+    <script src="js/auth.js"></script> <script>
+        // LÓGICA DE MENU DINÂMICO
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = localStorage.getItem("@limpapiscina/session");
+            if (session) {
+                const nav = document.getElementById('menu-nav');
+                const btnLogin = document.getElementById('btn-login');
+                
+                // Cria e insere o botão Pagamento
+                const linkPagamento = document.createElement('a');
+                linkPagamento.href = "pagamento.html";
+                linkPagamento.innerText = "Pagamento";
+                nav.insertBefore(linkPagamento, btnLogin);
+
+                // Muda login para sair
+                btnLogin.innerText = "Sair";
+                btnLogin.href = "#";
+                btnLogin.onclick = logout;
+            }
+        });
+
         document.getElementById('form-orcamento').addEventListener('submit', (e) => {
             e.preventDefault();
-            // Simula salvamento na agenda (padrão)
             addAgendamento("VISITA TÉCNICA: " + document.getElementById('contato').value, document.getElementById('data').value, "Avaliação", document.getElementById('obs').value + " - " + document.getElementById('endereco').value);
             alert("Solicitação enviada! Entraremos em contato."); window.location.href="index.html";
         });
