@@ -2,44 +2,20 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja | LimpaPiscina</title>
+    <title>Loja</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
     <header>
-        <div class="logo">
-            <h2>🌊 Produtos</h2>
-        </div>
-        <nav>
-            <nav>
-    <a href="index.html">Home</a>
-    <a href="loja.html">Loja</a>
-    <a href="orcamento.html">Orçamento</a> <a href="pagamento.html">Pagamento</a> <a href="login.html">Login</a>
-</nav>
-        </nav>
+        <div class="logo"><h2>🌊 Loja</h2></div>
+        <nav><a href="index.html">Home</a><a href="loja.html" style="border-bottom:2px solid white">Loja</a><a href="orcamento.html">Orçamento</a><a href="pagamento.html">Pagamento</a><a href="login.html">Login</a></nav>
     </header>
-
     <main>
-        <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 30px;">Produtos Profissionais</h2>
-        
-        <div id="lista-produtos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            <p>Carregando produtos...</p>
-        </div>
-
+        <h2 style="text-align:center; margin-bottom:20px;">Produtos</h2>
+        <div id="lista-produtos" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;"></div>
     </main>
-
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
-    
-    <script>
-        // Verifica se o usuário está logado (opcional: se quiser loja pública, remova esta linha)
-        // checkAuth('cliente'); 
-
-        // Carrega os produtos assim que a página abre
-        document.addEventListener('DOMContentLoaded', renderLoja);
-    </script>
-
+    <script>document.addEventListener('DOMContentLoaded', renderLoja);</script>
 </body>
 </html>
