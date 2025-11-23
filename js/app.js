@@ -37,7 +37,7 @@ function deleteAgendamento(id) {
     }
 }
 
-// --- GESTÃO DE CLIENTES (ATUALIZADO COM PREÇO) ---
+// --- GESTÃO DE CLIENTES (COM CONTRATO) ---
 const CLIENTES_KEY = "@limpapiscina/clientes";
 
 function getClientes() {
@@ -45,18 +45,14 @@ function getClientes() {
     return data ? JSON.parse(data) : [];
 }
 
-// Agora salvamos E-mail e Valor também
-function addCliente(nome, email, endereco, telefone, valor) {
+function addCliente(nome, email, endereco, telefone, valor, descricao) {
     const lista = getClientes();
-    // Verifica se já existe esse email na lista de clientes
     if(lista.find(c => c.email === email)) {
-        alert("Já existe um cliente cadastrado com este e-mail!");
-        return false;
+        alert("Já existe um contrato para este e-mail!"); return false;
     }
-    
-    lista.push({ id: Date.now(), nome, email, endereco, telefone, valor });
+    lista.push({ id: Date.now(), nome, email, endereco, telefone, valor, descricao });
     localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
-    alert("Cliente e valor cadastrados com sucesso!");
+    alert("Contrato salvo com sucesso!");
     return true;
 }
 
@@ -64,42 +60,36 @@ function renderClientes() {
     const lista = getClientes();
     const tbody = document.getElementById('lista-clientes');
     if(!tbody) return;
-
     tbody.innerHTML = '';
     lista.forEach(item => {
         tbody.innerHTML += `
             <tr>
-                <td>
-                    <strong>${item.nome}</strong><br>
-                    <small style="color:#666">${item.email}</small>
-                </td>
-                <td>${item.endereco}</td>
-                <td style="color: var(--primary-blue); font-weight:bold;">R$ ${item.valor}</td>
+                <td><strong>${item.nome}</strong><br><small>${item.email}</small></td>
+                <td>${item.endereco}<br><em style="font-size:0.8rem">${item.descricao || ''}</em></td>
+                <td style="color:var(--primary-blue);font-weight:bold;">R$ ${item.valor}</td>
                 <td><button onclick="deleteCliente(${item.id})" class="btn-delete">X</button></td>
             </tr>`;
     });
 }
 
 function deleteCliente(id) {
-    if(confirm("Remover este cliente?")) {
+    if(confirm("Remover contrato?")) {
         const lista = getClientes().filter(i => i.id !== id);
         localStorage.setItem(CLIENTES_KEY, JSON.stringify(lista));
         renderClientes();
     }
 }
 
-// --- FUNÇÃO PARA O CLIENTE PEGAR SEU PREÇO ---
+// Busca contrato pelo email
 function getMeuPlano(emailLogado) {
-    const lista = getClientes();
-    // Procura o cliente que tem o mesmo email do login
-    return lista.find(c => c.email === emailLogado); 
+    return getClientes().find(c => c.email === emailLogado); 
 }
 
 // --- LOJA ---
 const PRODUTOS = [
-    { id: 1, nome: 'Cloro Granulado 10kg', descricao: 'Cloro estabilizado.', preco: 189.90, imagem: 'https://via.placeholder.com/300?text=Cloro' },
-    { id: 2, nome: 'Algicida de Choque', descricao: 'Elimina algas.', preco: 45.50, imagem: 'https://via.placeholder.com/300?text=Algicida' },
-    { id: 3, nome: 'Limpa Bordas', descricao: 'Detergente especial.', preco: 22.00, imagem: 'https://via.placeholder.com/300?text=Limpa+Bordas' }
+    { id: 1, nome: 'Cloro Granulado 10kg', preco: 189.90, imagem: 'https://via.placeholder.com/300?text=Cloro' },
+    { id: 2, nome: 'Algicida de Choque', preco: 45.50, imagem: 'https://via.placeholder.com/300?text=Algicida' },
+    { id: 3, nome: 'Limpa Bordas', preco: 22.00, imagem: 'https://via.placeholder.com/300?text=Limpa+Bordas' }
 ];
 
 function renderLoja() {
@@ -109,9 +99,9 @@ function renderLoja() {
     PRODUTOS.forEach(prod => {
         container.innerHTML += `
             <div class="card" style="text-align: center;">
-                <img src="${prod.imagem}" alt="${prod.nome}" style="width:100%; border-radius: 5px;">
-                <h3 style="margin: 10px 0;">${prod.nome}</h3>
-                <h4 style="color: var(--primary-blue);">R$ ${prod.preco.toFixed(2)}</h4>
+                <img src="${prod.imagem}" alt="${prod.nome}" style="width:100%; border-radius:5px;">
+                <h3 style="margin:10px 0;">${prod.nome}</h3>
+                <h4 style="color:var(--primary-blue);">R$ ${prod.preco.toFixed(2)}</h4>
             </div>`;
     });
 }
