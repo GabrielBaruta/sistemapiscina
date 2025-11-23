@@ -178,3 +178,41 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
     margin-top: 20px;
     text-align: right;
 }
+
+/* --- BOTÃO DE CARRINHO NA PÁGINA (NOVO) --- */
+.loja-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Para não quebrar no celular */
+    gap: 20px;
+}
+
+.btn-carrinho-page {
+    background-color: white;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: 10px 25px;
+    border-radius: 30px; /* Borda redonda moderna */
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    box-shadow: var(--shadow);
+}
+
+.btn-carrinho-page:hover {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.cart-badge-page {
+    background: #ff9800; /* Laranja destaque */
+    color: white;
+    padding: 2px 8px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+}
