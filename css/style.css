@@ -179,13 +179,14 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
     text-align: right;
 }
 
-/* --- BOTÃO DE CARRINHO NA PÁGINA (NOVO) --- */
+/* --- BOTÃO DE CARRINHO NA PÁGINA --- */
 .loja-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Força um item para cada ponta */
     align-items: center;
+    width: 100%; /* Garante que a caixa ocupe a linha inteira */
     margin-bottom: 30px;
-    flex-wrap: wrap; /* Para não quebrar no celular */
+    flex-wrap: wrap; 
     gap: 20px;
 }
 
@@ -194,7 +195,7 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
     border: 2px solid var(--primary-blue);
     color: var(--primary-blue);
     padding: 10px 25px;
-    border-radius: 30px; /* Borda redonda moderna */
+    border-radius: 30px;
     text-decoration: none;
     font-weight: bold;
     display: flex;
@@ -202,6 +203,9 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
     gap: 10px;
     transition: 0.3s;
     box-shadow: var(--shadow);
+    
+    /* TRUQUE EXTRA: Se o flex falhar, isso empurra para a direita */
+    margin-left: auto; 
 }
 
 .btn-carrinho-page:hover {
@@ -210,7 +214,7 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
 }
 
 .cart-badge-page {
-    background: #ff9800; /* Laranja destaque */
+    background: #ff9800;
     color: white;
     padding: 2px 8px;
     border-radius: 50%;
