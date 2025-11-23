@@ -2,107 +2,59 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assinatura | LimpaPiscina</title>
+    <title>Pagamento</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .checkout-container { background: white; padding: 30px; border-radius: 10px; box-shadow: var(--shadow); max-width: 600px; margin: 0 auto; }
-        .valor-display {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #90caf9;
-        }
-        .valor-display h3 { margin: 0; font-size: 1.5rem; }
-        .valor-display p { margin: 5px 0 0 0; font-size: 0.9rem; }
+        .valor-display { background:#e3f2fd; color:#0d47a1; padding:20px; text-align:center; border-radius:8px; border:1px solid #90caf9; margin-bottom:20px;}
+        .contract-desc { font-style:italic; color:#555; margin-top:10px; }
     </style>
 </head>
 <body>
     <header>
         <div class="logo"><h2>🌊 Pagamento</h2></div>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="orcamento.html">Orçamento</a>
-            <a href="pagamento.html" style="border-bottom: 2px solid white;">Assinar</a>
-            <a href="login.html">Login</a>
-        </nav>
+        <nav><a href="index.html">Home</a><a href="loja.html">Loja</a><a href="orcamento.html">Orçamento</a><a href="pagamento.html" style="border-bottom:2px solid white">Pagamento</a><a href="login.html">Login</a></nav>
     </header>
-
-    <main>
-        <div id="msg-erro" style="display: none; text-align: center;">
-            <div class="card" style="padding: 40px;">
-                <h2 style="color: #d32f2f;">Plano não encontrado</h2>
-                <p>O piscineiro ainda não definiu o valor da sua manutenção.</p>
-                <p>Por favor, aguarde a visita técnica ou entre em contato.</p>
-                <br>
-                <a href="orcamento.html" class="btn">Solicitar Visita</a>
-            </div>
+    <main style="max-width:600px; margin: 80px auto;">
+        
+        <div id="msg-erro" class="card" style="display:none; text-align:center;">
+            <h2 style="color:#d32f2f;">Contrato não encontrado</h2>
+            <p>O piscineiro ainda não cadastrou seu contrato.</p>
+            <a href="orcamento.html" class="btn" style="margin-top:10px; display:inline-block;">Solicitar Visita</a>
         </div>
 
-        <div id="area-pagamento" class="checkout-container" style="display: none;">
-            <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 20px;">Autorizar Cobrança</h2>
-
+        <div id="area-pagamento" class="card" style="display:none;">
+            <h2 style="text-align:center; color:var(--primary-blue);">Assinar Contrato</h2>
             <div class="valor-display">
-                <p>Valor acordado para sua assinatura:</p>
-                <h3 id="valor-mostra">R$ 0,00 / mês</h3>
+                <p>VALOR MENSAL</p>
+                <h3 id="valor-mostra">R$ 0,00</h3>
+                <p id="desc-mostra" class="contract-desc">...</p>
             </div>
-
             <form id="form-assinatura">
-                <label>Frequência</label>
-                <select id="frequencia">
-                    <option value="mensal">Mensal</option>
-                    <option value="anual">Anual</option>
-                </select>
-
-                <h3 style="margin: 20px 0 10px 0; font-size: 1.1rem;">Dados do Cartão</h3>
-                <input type="text" placeholder="Nome no Cartão" required>
-                <input type="text" placeholder="0000 0000 0000 0000" required>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" placeholder="MM/AA" required>
-                    <input type="text" placeholder="CVV" required>
-                </div>
-
-                <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Confirmar Assinatura</button>
+                <label>Frequência</label><select><option>Mensal</option><option>Anual</option></select>
+                <label>Nome no Cartão</label><input type="text" required>
+                <label>Número do Cartão</label><input type="text" placeholder="0000 0000 0000 0000" required>
+                <div style="display:flex; gap:10px;"><input type="text" placeholder="MM/AA" required><input type="text" placeholder="CVV" required></div>
+                <button type="submit" class="btn" style="width:100%">Confirmar Assinatura</button>
             </form>
         </div>
     </main>
-
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
-    
     <script>
-        // 1. Verificar quem está logado
         const sessionStr = localStorage.getItem("@limpapiscina/session");
-        
-        if (!sessionStr) {
-            alert("Faça login para ver sua assinatura.");
-            window.location.href = "login.html";
-        } else {
+        if (!sessionStr) { alert("Faça login primeiro."); window.location.href = "login.html"; }
+        else {
             const user = JSON.parse(sessionStr);
-            
-            // 2. Buscar o preço deste usuário na lista de clientes (Criada pelo Admin)
-            // A função getMeuPlano está no js/app.js
-            const plano = getMeuPlano(user.email);
-
+            const plano = getMeuPlano(user.email); // Busca no 'banco de dados'
             if (plano && plano.valor) {
-                // Se achou o plano, mostra o formulário e o preço
                 document.getElementById('area-pagamento').style.display = 'block';
-                document.getElementById('valor-mostra').innerText = parseFloat(plano.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + " / mês";
+                document.getElementById('valor-mostra').innerText = parseFloat(plano.valor).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+                document.getElementById('desc-mostra').innerText = `"${plano.descricao}"`;
             } else {
-                // Se não achou (ou seja, o admin ainda não cadastrou esse email na lista de clientes)
                 document.getElementById('msg-erro').style.display = 'block';
             }
         }
-
-        // Simulação de envio
-        document.getElementById('form-assinatura').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("✅ Assinatura confirmada com sucesso!");
-            window.location.href = "index.html";
-        });
+        document.getElementById('form-assinatura').addEventListener('submit', (e)=>{ e.preventDefault(); alert("Assinatura confirmada!"); window.location.href="index.html"; });
     </script>
 </body>
 </html>
