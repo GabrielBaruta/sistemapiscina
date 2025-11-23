@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-blue: #0077b6;
+    --light-blue: #90e0ef;
+    --white: #ffffff;
+    --gray-bg: #f4f4f4;
+    --text-color: #333;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background-color: var(--gray-bg); color: var(--text-color); line-height: 1.6; }
+
+header {
+    background-color: var(--primary-blue); color: var(--white); padding: 1rem 2rem;
+    position: fixed; width: 100%; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+}
+header nav a { color: var(--white); text-decoration: none; margin-left: 20px; font-weight: 500; transition: 0.3s; }
+header nav a:hover { color: var(--light-blue); }
+
+main { margin-top: 80px; padding: 2rem; }
+
+.btn {
+    background-color: var(--primary-blue); color: var(--white); padding: 10px 20px;
+    border: none; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: bold;
+}
+.btn:hover { background-color: #023e8a; }
+
+/* Utilitários */
+.card { background: white; padding: 10px; border-radius: 8px; box-shadow: var(--shadow); }
+input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; }

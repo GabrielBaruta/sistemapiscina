@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header><div class="logo"><h2>🌊 LimpaPiscina</h2></div><nav><a href="index.html">Voltar</a></nav></header>
+    <main style="display:flex; justify-content:center;">
+        <div class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
+            <h2 style="text-align:center; margin-bottom: 1rem;">Entrar</h2>
+            <form id="form-login">
+                <label>E-mail</label><input type="email" id="email" required>
+                <label>Senha</label><input type="password" id="senha" required>
+                <button type="submit" class="btn" style="width:100%">Entrar</button>
+            </form>
+            <p style="text-align:center; margin-top:1rem;">Sem conta? <a href="cadastro.html">Cadastre-se</a></p>
+        </div>
+    </main>
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('form-login').addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginUser(document.getElementById('email').value, document.getElementById('senha').value);
+        });
+    </script>
+</body>
+</html>
