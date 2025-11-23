@@ -220,3 +220,67 @@ th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
     border-radius: 50%;
     font-size: 0.9rem;
 }
+
+/* --- BALÃO DE MENSAGEM DO WHATSAPP --- */
+
+/* 1. O Texto (O Balão Branco) */
+.whatsapp-float::before {
+    content: "Converse diretamente comigo!"; /* O texto que você quer */
+    position: absolute;
+    right: 75px;       /* Empurra para a esquerda do botão */
+    top: 50%;          /* Posiciona no meio verticalmente */
+    transform: translateY(-50%); /* Garante o alinhamento perfeito */
+    
+    background-color: white;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 20px;       /* Bordas bem redondas */
+    border-bottom-right-radius: 0; /* Dá um charme no canto */
+    
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;       /* Impede que o texto quebre linha */
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1); /* Sombra suave */
+    
+    /* Animação de entrada */
+    opacity: 0;
+    pointer-events: none; /* O clique passa através do texto */
+    animation: aparecerSuave 0.5s forwards 1s; /* Espera 1s e aparece */
+}
+
+/* 2. A Setinha (O Triângulo que aponta para o botão) */
+.whatsapp-float::after {
+    content: "";
+    position: absolute;
+    right: 68px; /* Cola no balão */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* Desenha um triângulo usando bordas */
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid white; /* A cor da setinha */
+    
+    /* Mesma animação do texto */
+    opacity: 0;
+    animation: aparecerSuave 0.5s forwards 1s;
+}
+
+/* 3. A Animação (Fade In) */
+@keyframes aparecerSuave {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-10px); /* Começa um pouco pro lado */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0); /* Termina no lugar certo */
+    }
+}
+
+/* Opcional: Esconder em celulares muito pequenos para não atrapalhar */
+@media (max-width: 400px) {
+    .whatsapp-float::before, .whatsapp-float::after {
+        display: none;
+    }
+}
