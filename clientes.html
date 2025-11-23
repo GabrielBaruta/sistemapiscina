@@ -4,77 +4,43 @@
     <meta charset="UTF-8">
     <title>Admin | Clientes</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .btn-delete { background: #ff6b6b; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-    </style>
 </head>
 <body>
     <script src="js/auth.js"></script>
     <script>checkAuth('admin');</script>
-    
     <header>
-        <div class="logo"><h2>🌊 Gestão de Clientes</h2></div>
+        <div class="logo"><h2>🌊 Painel Admin</h2></div>
         <nav>
             <a href="agendamentos.html">Agenda</a>
             <a href="clientes.html" style="border-bottom: 2px solid white;">Clientes</a>
             <a href="#" onclick="logout()">Sair</a>
         </nav>
     </header>
-
     <main style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <div class="card" style="flex: 1; min-width: 300px;">
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Cadastrar Cliente & Valor</h3>
+        <div class="card" style="flex:1; min-width:300px;">
+            <h3>Novo Contrato</h3>
             <form id="form-cliente">
-                <label>Nome do Cliente</label>
-                <input type="text" id="nome" required>
-                
-                <label>E-mail do Cliente (Importante!)</label>
-                <input type="email" id="email" placeholder="Para vincular ao login" required>
-
-                <label>Endereço</label>
-                <input type="text" id="endereco" required>
-                
-                <label>Telefone</label>
-                <input type="tel" id="telefone" required>
-
-                <label style="color: green; font-weight: bold;">Valor Mensal Acordado (R$)</label>
-                <input type="number" id="valor" placeholder="Ex: 250.00" step="0.01" required>
-
-                <button type="submit" class="btn" style="width: 100%;">Salvar Contrato</button>
+                <label>Nome</label><input type="text" id="nome" required>
+                <label>E-mail do Cliente (Login)</label><input type="email" id="email" required>
+                <label>Endereço</label><input type="text" id="endereco" required>
+                <label>Telefone</label><input type="tel" id="telefone" required>
+                <label>Descrição do Serviço</label><textarea id="descricao" rows="3" placeholder="Ex: Limpeza 2x semana..." required></textarea>
+                <label style="color:green;font-weight:bold;">Valor Mensal (R$)</label><input type="number" id="valor" step="0.01" required>
+                <button type="submit" class="btn" style="width:100%">Salvar</button>
             </form>
         </div>
-
-        <div class="card" style="flex: 2; min-width: 300px;">
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">Carteira de Clientes</h3>
-            <table style="width:100%; border-collapse: collapse;">
-                <thead style="background: var(--primary-blue); color: white;">
-                    <tr>
-                        <th style="padding:10px; text-align:left;">Cliente</th>
-                        <th style="padding:10px; text-align:left;">Endereço</th>
-                        <th style="padding:10px; text-align:left;">Valor Mensal</th>
-                        <th style="padding:10px;">Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="lista-clientes"></tbody>
-            </table>
+        <div class="card" style="flex:2; min-width:300px;">
+            <h3>Carteira de Clientes</h3>
+            <table><thead><tr><th>Cliente</th><th>Detalhes</th><th>Valor</th><th>Ação</th></tr></thead><tbody id="lista-clientes"></tbody></table>
         </div>
     </main>
-
     <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', renderClientes);
-
         document.getElementById('form-cliente').addEventListener('submit', (e) => {
             e.preventDefault();
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value; // Novo campo
-            const endereco = document.getElementById('endereco').value;
-            const telefone = document.getElementById('telefone').value;
-            const valor = document.getElementById('valor').value; // Novo campo
-            
-            addCliente(nome, email, endereco, telefone, valor);
-            renderClientes();
-            e.target.reset();
+            addCliente(document.getElementById('nome').value, document.getElementById('email').value, document.getElementById('endereco').value, document.getElementById('telefone').value, document.getElementById('valor').value, document.getElementById('descricao').value);
+            renderClientes(); e.target.reset();
         });
     </script>
 </body>
