@@ -29,5 +29,8 @@ main { margin-top: 80px; padding: 2rem; }
 .btn:hover { background-color: #023e8a; }
 
 /* Utilitários */
-.card { background: white; padding: 10px; border-radius: 8px; box-shadow: var(--shadow); }
-input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 20px; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+.btn-delete { background: #ff6b6b; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
